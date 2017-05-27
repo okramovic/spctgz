@@ -1,0 +1,167 @@
+<html>
+  <head>
+          <title>spacetags</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          
+    
+          <link rel="apple-touch-icon" sizes="120x120" href="https://cdn.glitch.com/730999ba-e2c8-41cc-9f22-278dd35296a4%2Fapple-touch-icon.png?1495573053540">
+          <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.glitch.com/730999ba-e2c8-41cc-9f22-278dd35296a4%2Ffavicon-32x32.png?1495573052270">
+          <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.glitch.com/730999ba-e2c8-41cc-9f22-278dd35296a4%2Ffavicon-16x16.png?1495573051897">
+          <link rel="manifest" href="https://cdn.glitch.com/730999ba-e2c8-41cc-9f22-278dd35296a4%2Fmanifest.json?1495573055925">
+          <link rel="mask-icon" color="#000000" href="https://cdn.glitch.com/730999ba-e2c8-41cc-9f22-278dd35296a4%2Fsafari-pinned-tab.svg?1495573056705" >
+          <meta name="apple-mobile-web-app-title" content="Space-tags">
+          <meta name="application-name" content="Space-tags">
+          <meta name="theme-color" content="#999999">
+  
+          <link  rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
+                 integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
+                 crossorigin=""/>
+          <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
+                 integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
+                 crossorigin=""></script>
+    
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+    
+    <script src="client.js"></script>
+    <script src="client2.js"></script>
+    
+    
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/upperMenu.css">  
+</head>
+  <body>
+    <!--div id="getLocation" class="button">get coords</div-->
+    
+    <div>
+      <p id="xx"></p>
+      <p id="pvid"></p>
+      <p id="pgps"></p>
+      <input type="file" accept="video/*" capture="camera" style="z-index- 2">
+    </div>
+    <script>
+        //alert("test");
+        //var x = document.getElementById("xx");
+        //x.innerHTML = "hi there";
+        
+    </script>
+    
+    <div id="video-container" style=" border- 2px dashed black">
+          <div style="position: absolute; top: 0px; left: 0px; z-index: 1;
+                      height: 35px; display: flex; align-items: center;
+                      padding: 17px 0px; ">  
+            
+                <div id="upperMenuOpen"  onclick="openUpperMenu()"   ><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                <div id="upperMenu" >
+                      <div id="bckWhite" onclick="skyNewCol('powderblue', 0.8)"></div>  
+                      <div id="bckBlack" onclick="skyNewCol('black', 0.8)"></div>
+                      <div id="bckTransp" onclick="skyNewCol('transparent', 0.1)"></div>
+                </div>
+          </div>  
+          <video id="camera-stream" style="border- 1px dashed cyan" autoplay></video>
+      
+          <div id="controls" style="">
+            <div id="reposition" class="button" style="display:flex; align-items:center"><i class="fa fa-compass" aria-hidden="true"></i></div>
+            <div id="addTag" class="button"><!--i class="fa fa-flag" aria-hidden="true"></i--><i class="fa fa-pencil" aria-hidden="true"></i></div>    
+            
+          </div>
+    </div>
+    
+    <div id="repositionMenu">
+          
+          <div id="mapDiv" style="width: 100%; height: 200px; border- 1px dashed green">
+              <div id="mapid" class="mapid"></div>
+          </div>
+      
+          <div style="width:100%;display:flex; justify-content: space-between;">
+                <div style=" width: 30%; display:flex; justify-content: flex-start">
+                    <div id="usegps" class="">use gps<!--i class="fa fa-map-marker" aria-hidden="true"></i--></div>
+                </div>
+                <div style=" width: 30%; display:flex; justify-content: center">
+                    <div id="openNumeric" class="buttonSmall">numeric</div>
+                </div>
+                <div style=" width: 30%; display:flex; justify-content: flex-end">
+                    <div id="closeRepositionMenu" style="">close</div>
+                </div>
+          </div>
+          <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+              <label id="mapAltLabel">adding 1 moves you 1m higher</label>
+              <input id="mapAlt"   type="number" class="tagMenuItem" placeholder="desired altitude">
+          </div>
+          <!--div style="width=100%; display:flex; align-items: center; justify-content:space-around"></div-->
+          
+          <div id="numericDiv">
+              <div style="width:100%;display:flex; justify-content: flex-end;">
+                    <div id="closeNumericDiv" class="" style="">back</div>
+              </div>
+            
+              <label>adding 0.000009 moves you 1m north</label>
+              <div style="width:100%;display:flex; justify-content: center; align-items:center;">
+                  <input id="userLat"   type="number" class="tagMenuItem"  placeholder="your latitude" >
+                    
+                  
+                  <div id="latadd3" class="adjust" >3m N</div>
+                  <div id="latsub3" class="adjust" >3m S</div>
+              </div>
+
+              <label>adding 0.000014 moves you 1m east</label>
+              <div style="width:100%;display:flex; justify-content: center; align-items:center;">
+                  <input id="userLon"   type="number" class="tagMenuItem" placeholder="your longitude">
+                  <div id="lonsub3" class="adjust">3m W</div>
+                  <div id="lonadd3" class="adjust">3m E</div>
+              </div>
+            
+              <label>adding 1 moves you 1m higher</label>
+              <div style="width:100%;display:flex; justify-content: center; align-items:center;">
+                  <input id="userAlt"   type="number" class="tagMenuItem" placeholder="your altitude">
+                  <div id="altadd1" class="adjust">1m U</div>
+                  <div id="altsub1" class="adjust">1m D</div>
+              </div>
+          </div>
+          <div id="confirmPosition" class="button" style="">reposition</div>
+    </div>
+    
+    
+    <div id="addtagmenu">
+      <div style="width:100%; display:flex; justify-content: flex-end;">
+          <div id="closeTagMenu" style="width/20%; padding: 20px ">close</div>
+      </div>  
+      <div style="display: flex; flex-direction: column; align-items:center">
+        
+        
+            <input id="text"   type="text" class="tagMenuItem" placeholder="message" value="">
+            <input id="author" type="text" class="tagMenuItem" placeholder="author">
+        
+            <select id="selectColor" class="tagMenuItem" style="">
+                    <option disabled>choose Tag's color</option>
+                    <option value="white">white</option>
+                    <option value="blue">blue</option>
+                    <option value="red">red</option>
+                    <option value="black">black</option>
+            </select> 
+            <input id="tagSize"   type="number" class="tagMenuItem" placeholder="size">
+
+            <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
+            <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
+            <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
+            <div id="submit" class="button">place into space</div>
+            <div id="map"  style="padding: 20px" >map</div>
+        
+        
+      </div>  
+    </div>
+    
+    
+    
+    <!--div id="vr" style="border: 2px solid orange"-->
+    <a-scene  >
+      <a-sky color="powderblue" opacity="0.1"></a-sky>
+      <a-entity id="cam" >
+                <a-camera><a-cursor></a-cursor></a-camera>
+      </a-entity>
+    </a-scene>
+  <!--/div-->
+  </body>
+</html>

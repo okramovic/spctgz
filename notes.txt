@@ -1,0 +1,78 @@
+to check lat long distance properly:   
+  http://www.movable-type.co.uk/scripts/latlong.html
+  
+  
+
+old examples
+  var tag1 = { "lat": 48.191461, "lon": 16.295114, "y": 1.5, "text": "welcome to Space-tags", "col": "green" }
+  var dvur = {   "lat":48.1913985, "lon":16.2949507, "y": 1, "text": "yard", "col": "blue" }
+  var balkon = { "lat":48.191320,  "lon":16.295156,  "y":  10, "text": "Mr. Ing Gunter Landa", "col": "red" }
+  var zero = {   "lat":48.1913985, "lon":16.2949507, "y": 0,  "text": "point zero", "col": "pink" }
+
+
+
+  web ar 
+  
+  https://dev.to/andraconnect/augmented-reality-in-10-lines-of-html
+  
+  http://engineering.daqri.com/2015/10/15/ar-on-mobile-web.html
+  
+    1) Marker Tracking - JSARToolkit (a JavaScript port of FLARToolKit) 
+                - https://github.com/kig/JSARToolKit
+    2) 3D Content - WebGL using Three.JS (Browser Support Table)
+                - https://threejs.org/
+                
+    3) Camera access - getUserMedia/Stream API - browser support: 
+                  http://caniuse.com/#feat=stream
+                - https://www.html5rocks.com/en/tutorials/getusermedia/intro/
+                
+    4) (Optional) Device Orientation - device orientation (Browser Support 
+                        Table) - http://caniuse.com/#feat=deviceorientation 
+                - to support panorama or not camera-based virtual augmentation
+                - https://www.html5rocks.com/en/tutorials/device/orientation/
+
+
+https://aframevr.slack.com/
+https://www.facebook.com/groups/aframevr/
+
+
+
+camera stream
+
+    https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+    http://blog.teamtreehouse.com/accessing-the-device-camera-with-getusermedia
+    
+    
+    
+GPS accuracy
+
+    - In ideal conditions (clear sky, no obstructions, amount of satellites) it
+      should get 10 - 20 m accuracy. Better than that and you need military
+      hardware.
+      
+           3G iPhone w/ A-GPS ~ 8 meters     
+           3G iPhone w/ wifi ~ 74 meters     
+           3G iPhone w/ Cellular positioning ~ 600 meters
+
+  * http://www.nexgendesign.com/lost-in-tracking-mobile-gps
+    good - clear sky, outdoors, no urban canyons, no cold start (viz article),
+           no dense forest
+         - restarting your device or turning GPS on/off for several times helps more often than it may seem
+
+      
+    
+    - gets worse with bad weather
+    - exterior conditions are a big factor as well.  Any obstacles in the sky or tall buildings will make GPS reception very tricky.
+    
+    - The GPS which are used for civil applications have an accuracy in the range of +/-10m. The military grade GPS have an accuracy in the range of +/-1cm. There is some induced noise added specially to the mobile GPS to make it less accurate. But you can take help of the mobile network and wifi to make the mobile positioning system accurate upto +/-3m.
+    
+    - This is very useful in an urban environment, where GPS doesn't work so great on its own, because every time somebody makes a positioning you know a little bit more about the properties of the area around him/her.  The more people move around the more accurate the map is. This extra knowledge is used to narrow down your GPS result to a more precise position.
+    
+    - With a good GPS signal, you can get to 25-35 feet resolution (2011). This generally doesn't work indoors. Depending on your phone this may work even without a service plan.
+    -  Most governments restrict the GPS quality to a certain level to make sure the military and law enforcement gear has an edge over commercial stuff. In the US is is +-16 meters, in some other countries can be +-32 meters.
+    
+from https://www.quora.com/How-accurate-is-mobile-phone-GPS
+    
+    
+Navigation with Shoe (inertial) Sensors:
+      https://www.youtube.com/watch?v=hYS9NGLFZtE
