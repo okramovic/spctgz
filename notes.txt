@@ -1,7 +1,10 @@
+https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+
 to check lat long distance properly:   
   http://www.movable-type.co.uk/scripts/latlong.html
   
-  
+oauth2
+  http://www.bubblecode.net/en/2016/01/22/understanding-oauth2/
 
 old examples
   var tag1 = { "lat": 48.191461, "lon": 16.295114, "y": 1.5, "text": "welcome to Space-tags", "col": "green" }

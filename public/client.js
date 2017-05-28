@@ -1,15 +1,11 @@
 /*
-
   				na lat rozdíl  0.000009 = 1m		  //	1”  = 30.89 m
+				  na lon rozdíl  0.000014 = 1,03m		//	1”  = 20.59 m
 
-				  na lon rozdíl 0.000014 = 1,03m		//	1”  = 20.59 m
-
-  
-
-   */
+*/
 var logr= false;
 
-
+var vid;
 
 
 var cntr = 0;
@@ -38,7 +34,18 @@ $(function() {
   console.log("hi");
   
   //$("#getLocation").click(function(){ getGPS(null)})
-
+  $("#stop").click(function(){
+      
+            //vid.pause(); //$("video").remove(); //console.log("vid",window.localStream);
+            window.localStream.getTracks().forEach(function(track){ track.stop()});
+  })  
+  $("#play").click(function(){
+      //alert("stopped?");
+      //vid.play();
+      //$("#video-container").append('<video id="camera-stream" style="border- 1px dashed cyan" autoplay></video>');
+      video();
+  })
+  
   $("#reposition").on('click', function(){
           
         $("#addTag").hide()
@@ -66,12 +73,9 @@ $(function() {
         }
         */
         //console.log("user @", user.lat, user.lon);
+        map(user.lat, user.lon, tags)
     
-    
-        cntr++
-        map(user.lat, user.lon)
-    
-        console.log ("click finito")
+        //console.log ("click finito")
     
   })
   $("#usegps").click(function(){
@@ -499,7 +503,7 @@ function getGPS(req, cb) {
           console.log("|||||||   no navigator!!");
     }
 }
-function map(ulat, ulon){
+function map(ulat, ulon, t){
           //console.log("map?", ulat, ulon, cntr);
           //console.log("user at " + user.lat + " , " + user.lon);
           //$("#mapDiv").empty();
@@ -528,7 +532,23 @@ function map(ulat, ulon){
         if (userNew !== undefined) userNew.remove()
   
     //var
-    userOld = L.marker([user.lat, user.lon]).addTo(mymap).bindPopup("you now (GPS?)").openPopup();
+    userOld = L.marker([user.lat, user.lon]).addTo(mymap).bindPopup("GPS says this").openPopup();
+  
+    for (var i = 0; i< t.length; i++){
+      
+            if (t[i].name === "zero") continue;
+      
+            var col, fillOpa;
+            if (t[i]._type === "text")     col = t[i].col; else col = "white"
+            if (t[i]._type === "text") fillOpa = 0.25; else fillOpa = 0;
+      
+            var circle = L.circle([t[i].lat, t[i].lon],{
+                                                        color: col, 
+                                                        fillColor: t[i].col, 
+                                                        fillOpacity: fillOpa, 
+                                                        radius: 3
+            }).addTo(mymap).bindPopup( t[i]._type + " @ " + t[i].alt + " m high");//.openPopup()  //
+    }
     //var userNew;
     
     //var popup = L.popup();
@@ -586,9 +606,9 @@ function map(ulat, ulon){
 }//end of Map fun
 function video(){
     
-            //setScene([cam, tag1, dvur, balkon, zero])
             
-             //$("p").val() +
+            //setScene([cam, tag1, dvur, balkon, zero])
+            //$("p").val() +
             var front = false
             var videoOptions = { audio: false,
                                  video: {
@@ -602,7 +622,7 @@ function video(){
             //console.log(navigator.mediaDevices.getUserMedia)
             //$("p").html($("p").html() + " " + navigator.mediaDevices.toString() + ',<br>getUserMedia: ' + navigator.mediaDevices.getUserMedia)
             if (logr) $("#pvid").html("nav.mediaDevices.getUM>" + navigator.mediaDevices + "<");          
-            if (logr) $("#pvid").html( "test x")// + $("#p").html())
+            if (logr) $("#pvid").html( "test x");// + $("#p").html())
   
                       if (navigator.mediaDevices === undefined) {
                         navigator.mediaDevices = {};
@@ -653,7 +673,9 @@ function video(){
                         if (logr) $("#pvid").html("sukces video func");
                         if (logr) $("#pvid").fadeOut(5000);
               
-                        var vid = document.getElementById('camera-stream');
+                        //var 
+                        window.localStream = stream;
+                        vid = document.getElementById('camera-stream');
                         vid.src = window.URL.createObjectURL(stream);//.play();
                         vid.play();
                         

@@ -24,6 +24,7 @@
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
     
     <script src="client.js"></script>
     <script src="client2.js"></script>
@@ -49,16 +50,29 @@
     </script>
     
     <div id="video-container" style=" border- 2px dashed black">
-          <div style="position: absolute; top: 0px; left: 0px; z-index: 1;
+          <div style="width: 100%;
+                      position: absolute; top: 0px; left: 0px; z-index: 1;
                       height: 35px; display: flex; align-items: center;
                       padding: 17px 0px; ">  
             
-                <div id="upperMenuOpen"  onclick="openUpperMenu()"   ><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                
                 <div id="upperMenu" >
                       <div id="bckWhite" onclick="skyNewCol('powderblue', 0.8)"></div>  
                       <div id="bckBlack" onclick="skyNewCol('black', 0.8)"></div>
                       <div id="bckTransp" onclick="skyNewCol('transparent', 0.1)"></div>
+                      <div id="stop" class="upperMenuButton"><span>stop</span></div>
+                      <div id="play" class="upperMenuButton"><span>play</span></div>
                 </div>
+                <div id="upperMenuOpen"  onclick="openUpperMenu()"   ><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+            
+            <div style="display: flex; flex-direction: row">
+                <label>register here</label>
+                <input id="regName" type="text" placeholder="nick">
+                <input id="regMail" type="email"  placeholder="email">
+                <input id="regPass" type="password"  placeholder="passwrd">
+                <div   id="sendMail" onclick="register()">confirm registration</div>  
+            </div>    
+            
           </div>  
           <video id="camera-stream" style="border- 1px dashed cyan" autoplay></video>
       
@@ -158,6 +172,7 @@
     <!--div id="vr" style="border: 2px solid orange"-->
     <a-scene  >
       <a-sky color="powderblue" opacity="0.1"></a-sky>
+      <!--a-gradient-sky material="shader: gradient; topColor: 255 255 255; bottomColor: 0 121 255;"></a-gradient-sky-->
       <a-entity id="cam" >
                 <a-camera><a-cursor></a-cursor></a-camera>
       </a-entity>

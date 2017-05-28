@@ -3,6 +3,9 @@ var express = require('express');
 var app = express();
 var mongo = require('mongodb').MongoClient;
 
+var nodemailer = require('nodemailer');
+var sendmail = require('sendmail')();
+
 // we've started you off with Express, but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
 
@@ -31,7 +34,8 @@ app.get("/getTags", function (request, response) {
                                 if (err) throw err;
                                 //console.log(result.length, result);
 
-                                response.send(result)
+                                response.send(result);
+                                response.end()
 
                                 db.close();
                     });
@@ -78,6 +82,7 @@ app.post("/postTag", function (request, response) {
                                       //console.log(result)
                                     //response.sendStatus(200); 
                                     response.send(result)
+                                    response.end()
                                     db.close()
                                     }
                                 
@@ -95,6 +100,65 @@ app.post("/postTag", function (request, response) {
   
 });
 
+
+
+app.post("/sendmail", function(req, res){
+  
+              var newUser = '';
+  
+              //console.log("data sent?",req.query)
+              req.setEncoding('utf8');
+              req.on("data", function(data){
+                
+                  newUser += data
+                  //console.log(typeof newUser, newUser);
+                  
+              })
+              req.on("end", function(){
+                
+                      newUser = JSON.parse(newUser)
+                      console.log(typeof newUser, newUser);
+                
+                      //res.sendStatus(200);
+              
+  
+  
+                                        // setup email data with unicode symbols
+                                        /*var mailOptions = {
+                                            from: '"Fred Foo 👻" <okram@tuta.io>', // sender address
+                                            to: 'okram@protonmail.ch',  //, baz@blurdybloop.com', // list of receivers
+                                            subject: 'Hello ✔ Word', // Subject line
+                                            text: 'Hello word', // plain text body
+                                            html: '<b>Hello world html</b>' // html body
+                                        };*/
+
+                        
+                        sendmail({
+                                    from: 'no-reply@spacetagz.com',
+                                    to: newUser.email,
+                                    subject: '✔ your Space-tagz registration info ✔', // Subject line
+                                    text: 'text Hello word text', // plain text body
+                                    html: '<p>you requested registration at spacetagz.com</p>' + 
+                                          '<p>your nick: ' + newUser.nick + '</p><br>' + 
+                                          '<p>reg. mail: ' + newUser.email + '</p><br>' + 
+                                          '<p>your pass: ' + newUser.pass + '</p>' +
+                                          '</br>' + '<p>enjoy</p>' ,
+                                    }, 
+                                 function(err, reply) {
+                                    if (err) {
+                                                res.sendStatus(500);
+                                                console.log(err && err.stack);
+
+                                    } else {
+
+                                      console.dir(reply);
+                                      res.sendStatus(200);
+                                    }
+                          });
+                        
+                })
+  
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {

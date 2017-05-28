@@ -9,12 +9,25 @@ function skyNewCol(col, opa){
         $("#upperMenuOpen").show();
         $("#upperMenu").hide();
   
-        $("a-sky").attr("color", col);// color="powderblue" opacity="0.1"
+        //$("a-gradient-sky").hide
+        // color="powderblue" opacity="0.1"
         $("a-sky").attr("opacity", opa);
+        $("a-sky").attr("color", col);
+        //$("a-scene").add('<a-gradient-sky material="shader: gradient; topColor: 255 255 255; bottomColor: 0 0 0;"></a-gradient-sky>');
+        //$("a-gradient-sky").attr("material", "shader: gradient; topColor: 255 255 255; bottomColor: " + "0 0 0;");
 }
 
 
+function register(){
 
+        var obj = {}
+        $.post("sendmail", JSON.stringify({"nick": $("#regName").val(), "email": $("#regMail").val(), "pass": $("#regPass").val()}), 
+               function(data, status){
+          
+                    console.log("status",status);
+          
+        })
+}
 
 function repoCamera(lat,lon,alt, cb){
   

@@ -1,9 +1,51 @@
-- i can start and stop battery eating video background
+- create system to post also images
 
-make background video automatically play also on iphone / brave, safari
-    - or at least turn off ugly video icon
-    - i can switch a-scene bck color (black or white)
+- create login and user system
+
+- database stores ip address
+
+- i can move in the scene (WSAD style + UP a DOWN)
+      - ican open my custom WSAD keyboard and pressing those i move in the 
+        scene - (for small repositioning)
+
+
+
+there could be objects in scene that indicate north (or all NESW sides)
+      or lens flare
+    
     
 server filters only tags in circle of 5km and those sends to client
 
 i can edit my tags
+
+publish it only somwehere where people cannot see the code
+
+
+
+later:
+    - make background video automatically play also on iphone / brave, safari
+          - https://developers.google.com/web/updates/2016/01/mediarecorder
+          - https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API
+          - https://hdfvr.com/html5-video-recording
+            
+          - https://github.com/flysonic10/aframe-passthrough
+      
+    - pictures always face camera
+            https://github.com/tizzle/aframe-sprite-component
+
+
+
+done:
+
+- or at least turn off ugly video icon
+- i can switch a-scene bck color (black or white)
+- i can start and stop video background (is eating battery)
+        https://jsfiddle.net/sasivarunan/2xLbv7n9/
+- map shows me public tags around me
+
+
+
+maybes - 
+     floating menu - https://github.com/IdeaSpaceVR/aframe-ui-modal-component
+     gradient sky  - https://github.com/zcanter/aframe-gradient-sky
+  
