@@ -1,4 +1,6 @@
 // init project
+//var http = require('http');
+var request = require("request");
 var express = require('express');
 var app = express();
 var mongo = require('mongodb').MongoClient;
@@ -18,8 +20,8 @@ app.get("/", function (request, response) {
 });
 
 
-var url = "mongodb://" + process.env.user + ":" + process.env.pass + "@ds151661.mlab.com:51661/spacetags1"
-app.get("/getTags", function (request, response) {
+//var url = "mongodb://" + process.env.me + ":" + process.env.mypass + "@ds151661.mlab.com:51661/spacetags1"
+/*app.get("/getTags", function (request, response) {
   
         console.log("get request")
   
@@ -42,7 +44,34 @@ app.get("/getTags", function (request, response) {
               }
         });
   
-});
+});*/
+app.get("/elevation", function(req, res){
+  
+          console.log("elevation req",req.query)
+          //console.log(process.env.gmps)
+  
+          var url = "https://maps.googleapis.com/maps/api/elevation/json?locations=" + req.query.lat + "," + req.query.lon + "&key=" + process.env.gmps
+          var options = {
+                          host: 'maps.googleapis.com',
+                          //port: 80,                                // req.query.stringify({"q":place})
+                          path: '/maps/api/elevation/json?locations='+ req.query.lat + ","+ req.query.lon + 
+                                '&key=' + process.env.gmps
+                                //'&output=json&oe=utf8/&sensor=false&key=' + process.env.gmps
+                        };
+          
+          request(url, function (error, response, body) {
+                  if (!error && response.statusCode == 200) {
+                      body =JSON.parse(body);
+                      //console.log(response,"---- ", body)
+                      //console.log(body.results[0].elevation );
+                      res.end(body.results[0].elevation.toFixed(2) )
+                  }
+                  else {
+                      // The request failed, handle it
+                  }  
+          })  
+
+})
 
 // could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
 app.post("/postTag", function (request, response) {
@@ -62,10 +91,11 @@ app.post("/postTag", function (request, response) {
         
               console.log("received wholedata", typeof wholedata, wholedata)
         
+              var url = "mongodb://public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
               mongo.connect(url, function(err, db){
                     if (err) throw(err)
                     else{
-                      
+                      console.log("connected");
                       db.collection("_001").insertOne(wholedata,function(er, res){
                         
                         if (er) throw(er)
@@ -102,7 +132,7 @@ app.post("/postTag", function (request, response) {
 
 
 
-app.post("/sendmail", function(req, res){
+app.post("/register", function(req, res){
   
               var newUser = '';
   
@@ -117,12 +147,62 @@ app.post("/sendmail", function(req, res){
               req.on("end", function(){
                 
                       newUser = JSON.parse(newUser)
-                      console.log(typeof newUser, newUser);
+                      console.log("newuser",typeof newUser, newUser);
                 
-                      //res.sendStatus(200);
-              
-  
-  
+                  var url = "mongodb://public" + ":" + process.env["publicpass"] + "@ds151661.mlab.com:51661/spacetags1"
+                  mongo.connect(url, function(er, db){
+                    
+                          if (er) throw(er)
+                          else{
+                            
+                            var query = {//"nick": newUser.nick, 
+                                         "email": newUser.email}
+                            
+                            db.collection("users_001").find(query).toArray(function(er, result){
+                                    if (er) throw (er)
+                                    else{
+                                      
+                                        console.log("result",typeof result, result)
+                                      
+                                        if (result.length !== 0){  // credentials already in use
+                                          
+                                              res.end("occupied")
+                                              console.log("cant register w these credentials")
+                                          
+                                        } else if (result.length === 0){   // welcome 
+                                            
+                                              console.log("no such man on board. welcome");
+                                              res.sendStatus(200)
+                                              
+                                              /*sendmail({
+                                                          from: 'no-reply@spacetagz.com',
+                                                          to: newUser.email,
+                                                          subject: '✔ your Space-tagz registration info ✔', // Subject line
+                                                          text: 'text Hello word text', // plain text body
+                                                          html: '<p>you requested registration at spacetagz.com</p>' + 
+                                                                '<p>your nick: ' + newUser.nick + '</p><br>' + 
+                                                                '<p>reg. mail: ' + newUser.email + '</p><br>' + 
+                                                                '<p>your pass: ' + newUser.pass + '</p>' +
+                                                                '</br>' + '<p>enjoy</p>' ,
+                                                          }, 
+                                                          function(err, reply) {
+                                                          if (err) {
+                                                                      res.sendStatus(500);
+                                                                      console.log(err && err.stack);
+
+                                                          } else {
+
+                                                            console.dir(reply);
+                                                            res.sendStatus(200);
+                                                          }
+                                              });*/
+                                        }
+                                    }
+                              
+                                  
+                            }) 
+                          }
+                  })
                                         // setup email data with unicode symbols
                                         /*var mailOptions = {
                                             from: '"Fred Foo 👻" <okram@tuta.io>', // sender address
@@ -131,36 +211,162 @@ app.post("/sendmail", function(req, res){
                                             text: 'Hello word', // plain text body
                                             html: '<b>Hello world html</b>' // html body
                                         };*/
-
                         
-                        sendmail({
-                                    from: 'no-reply@spacetagz.com',
-                                    to: newUser.email,
-                                    subject: '✔ your Space-tagz registration info ✔', // Subject line
-                                    text: 'text Hello word text', // plain text body
-                                    html: '<p>you requested registration at spacetagz.com</p>' + 
-                                          '<p>your nick: ' + newUser.nick + '</p><br>' + 
-                                          '<p>reg. mail: ' + newUser.email + '</p><br>' + 
-                                          '<p>your pass: ' + newUser.pass + '</p>' +
-                                          '</br>' + '<p>enjoy</p>' ,
-                                    }, 
-                                 function(err, reply) {
-                                    if (err) {
-                                                res.sendStatus(500);
-                                                console.log(err && err.stack);
-
-                                    } else {
-
-                                      console.dir(reply);
-                                      res.sendStatus(200);
-                                    }
-                          });
-                        
-                })
-  
+                })  
 })
+app.post("/login", function(req, res){
+  
+        console.log("login")
+  
+        var all = '';
+        req.setEncoding('utf8')
+        req.on("data", function(data){
+          
+              all += data;
+        })
+        req.on("end", function(){
+          
+              all = JSON.parse(all)
+          
+              console.log("all", all, typeof all)
+          
+              var url2 = "mongodb://public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
+              console.log(process.env.otherspass)
+              mongo.connect(url2, function(err, db){
+                    if (err) {throw(err); res.sendStatus(404)}
+                    else{
+                
+                          //{  nick: "nick", email: "email",pass: "pass"}
+                      
+                          //result = 
+                          db.collection('users_001').find({"nick": all.nick, "pass": all.pass}).toArray(function(er, result){ 
+                            
+                                    if (er) {throw (er); res.sendStatus(404), res.end();}
+                                    else {
+                                        console.log("er", er); 
+                                        console.log("result",typeof result, result, result.length);
+                                      
+                                        if      (result.length > 0) {res.sendStatus(200); console.log("sukces")}
+                                      
+                                        else if (result.length === 0) {
+                                            console.log("fail")
+                                          
+                                            //res.status(404).send("fail"); 
+                                            //res.end();
+                                            res.end("fail"); 
+                                            console.log("fail 2")
+                                            }
+                                      
+                                        
+                                    }
+                          })
+                          //console.log(typeof result)
+                          //console.log(result)
+                    }
+              })
+        })
+        
+})
+
+
+app.get("/getTags", function (req, res) {
+  
+        console.log("get request by", req.query)
+        
+        var d = '';
+  
+        req.setEncoding('utf8');
+        req.on("data", function(data){
+          
+            //d+=data
+            //console.log("d", data);
+        })
+        req.on("end", function(){
+          
+          
+                //d = req.query
+                
+          
+                if (req.query.username !== "public") req.query.username = "registereduser"
+                console.log("user", req.query)
+          
+                var url = "mongodb://" + req.query.username + ":" + process.env[req.query.username + "pass"] + "@ds151661.mlab.com:51661/spacetags1"
+                mongo.connect(url, function(err, db) {
+                      if (err) throw err;
+                      else { console.log("conected to db")
+
+
+                            //example for find: var query = { address: "Park Lane 38" };
+
+                            db.collection("_001").find().toArray(function(err, result) {
+                                        if (err) throw err;
+                                        
+                                        else{
+                                            //console.log(result.length, result);  
+                                          
+                                                                                        // km of radius to include
+                                            filterByDistance(result, req.query.userCoords, 5, function(rslt){
+                                              
+                                                      //console.log(rslt)
+                                                      res.send(rslt);
+                                                      res.end()
+
+                                                      db.close();
+                                              
+                                            });
+                                          
+                                            
+                                        }
+                            });
+                      }
+                });
+        })
+});
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+  console.log('listening on port ' + listener.address().port);
 });
+
+
+
+function filterByDistance(initialArray, user, dist, cb){
+  
+     // console.log("---ok?") 
+     // console.log(user.lat, user.lon)
+         
+  
+      var result = [];
+      
+      initialArray.forEach(function(tag, index){
+        
+              
+        
+              if (distanceInKm(user.lat, user.lon, tag.lat, tag.lon) <= dist) result.push(tag)
+        
+              if (index === initialArray.length-1) cb(result)
+        
+      })
+  
+
+
+      function distanceInKm(lat1, lon1, lat2, lon2) {
+        var earthRadiusKm = 6371;
+
+        var dLat = degreesToRadians(lat2-lat1);
+        var dLon = degreesToRadians(lon2-lon1);
+
+        lat1 = degreesToRadians(lat1);
+        lat2 = degreesToRadians(lat2);
+
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        
+        return earthRadiusKm * c;
+      }
+      function degreesToRadians(degrees) {
+          return degrees * Math.PI / 180;
+      }
+  
+}

@@ -1,0 +1,35 @@
+co od toho očekávám? co by to mělo splňovat?
+
+
+
+how to introduce it
+    i have to have basic working thing =
+        i can view public content without login/registering  
+        i can register as new user
+        i can login 
+        after login i can choose content to display
+    
+        i can post message
+        i can post picture
+        i can edit/delete my old mssges
+    
+    
+to whom to introduce it?
+    my fb
+    fbAR group
+    aframe/webVR fans
+    
+how:
+  to my fb:
+      post something into air so everyone in center can see it
+        praha:
+          bolek polívka, jednou si vas všecky kupim
+          famu - (digitalni informace? 01010101)
+          stross
+        wien
+          
+    může to umístit automaticky welcome message w picture in front of them
+        může to být něco co vypadá jako klasický post, s profilovým obrázkem, 
+        nickem autora, a jeho vzkaz a třeba datum umístění - anebo taky ne
+            tím se zbavím nutnosti konkrétního obsahu a stačil by tento 
+            konkrétní obecný msg

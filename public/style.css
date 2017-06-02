@@ -39,7 +39,7 @@ a-scene{
   display: -webkit-flex;
   flex-direction: column;
   -webkit-flex-direction: column;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
     
 }
@@ -48,6 +48,9 @@ a-scene{
   padding: 0px;
   width:100%;
   height: auto;
+  
+  position: absolute;
+  top: 0px;
   
   z-index: -1;
   border- 1px dashed blue;
@@ -62,7 +65,7 @@ a-scene{
   
   background-color: black; 
   border- 2px solid brown;
-  display: flex; 
+  display: none; 
   justify-content: space-around; 
   align-items: center;
 }

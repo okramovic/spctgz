@@ -1,3 +1,51 @@
+function registerOpen(){
+  
+      $("#regAndLogin").css({ "position":"static", //"top": "0px", 
+                              "height": "auto",
+                              "display":"flex",
+                              "flex-direction": "column"});
+  
+      $("#regAndLogButtons").css({ //"height": "35px",
+                                  "display":"flex",
+                                  "flex-direction": "column",
+                                  "justify-content": "space-around",
+                                  "align-items": "center"})
+  
+      $("#regAndLogButtons").hide();
+      $("#regDiv").css("display", "flex");
+      
+}
+
+function loginOpen(){
+  
+      $("#regAndLogin").css({ "position":"static", //"top": "0px", 
+                              "height": "auto",
+                              "display":"flex",
+                              "flex-direction": "column"});
+  
+      $("#regAndLogButtons").css({ //"height": "35px",
+                                  "display":"flex",
+                                  "flex-direction": "column",
+                                  "justify-content": "space-around",
+                                  "align-items": "center"})
+  
+      $("#regAndLogButtons").hide();
+      $("#loginDiv").css("display", "flex");
+  
+      
+}
+
+
+function regLogInitialView(){
+  
+        $("#regDiv").hide()
+        $("#loginDiv").hide()
+        $("#regAndLogButtons").show()
+        $("#publicButton").show()
+      
+  
+}
+
 function openUpperMenu(){
   
       $("#upperMenu").css("display","flex");
@@ -18,16 +66,7 @@ function skyNewCol(col, opa){
 }
 
 
-function register(){
 
-        var obj = {}
-        $.post("sendmail", JSON.stringify({"nick": $("#regName").val(), "email": $("#regMail").val(), "pass": $("#regPass").val()}), 
-               function(data, status){
-          
-                    console.log("status",status);
-          
-        })
-}
 
 function repoCamera(lat,lon,alt, cb){
   

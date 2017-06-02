@@ -3,18 +3,15 @@ https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 to check lat long distance properly:   
   http://www.movable-type.co.uk/scripts/latlong.html
   
+using sendmail    https://www.npmjs.com/package/sendmail
+using nodemailer  https://nodemailer.com/transports/sendmail/
+                  https://nodemailer.com/about/
+  
 oauth2
   http://www.bubblecode.net/en/2016/01/22/understanding-oauth2/
 
-old examples
-  var tag1 = { "lat": 48.191461, "lon": 16.295114, "y": 1.5, "text": "welcome to Space-tags", "col": "green" }
-  var dvur = {   "lat":48.1913985, "lon":16.2949507, "y": 1, "text": "yard", "col": "blue" }
-  var balkon = { "lat":48.191320,  "lon":16.295156,  "y":  10, "text": "Mr. Ing Gunter Landa", "col": "red" }
-  var zero = {   "lat":48.1913985, "lon":16.2949507, "y": 0,  "text": "point zero", "col": "pink" }
 
-
-
-  web ar 
+web ar 
   
   https://dev.to/andraconnect/augmented-reality-in-10-lines-of-html
   
@@ -79,3 +76,13 @@ from https://www.quora.com/How-accurate-is-mobile-phone-GPS
     
 Navigation with Shoe (inertial) Sensors:
       https://www.youtube.com/watch?v=hYS9NGLFZtE
+      
+      
+      
+      
+      
+old examples
+  var tag1 = { "lat": 48.191461, "lon": 16.295114, "y": 1.5, "text": "welcome to Space-tags", "col": "green" }
+  var dvur = {   "lat":48.1913985, "lon":16.2949507, "y": 1, "text": "yard", "col": "blue" }
+  var balkon = { "lat":48.191320,  "lon":16.295156,  "y":  10, "text": "Mr. Ing Gunter Landa", "col": "red" }
+  var zero = {   "lat":48.1913985, "lon":16.2949507, "y": 0,  "text": "point zero", "col": "pink" }

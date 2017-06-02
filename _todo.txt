@@ -1,24 +1,36 @@
-- create system to post also images
-
 - create login and user system
+      - user musí při registraci napsat proč se chce přidat (alespoň 100 slov a 
+        až já to schválím, jeho účet bude aktivní/použitelný)
 
-- database stores ip address
-
-- i can move in the scene (WSAD style + UP a DOWN)
+- i can walk in the scene (WSAD style + UP a DOWN)
       - ican open my custom WSAD keyboard and pressing those i move in the 
         scene - (for small repositioning)
 
 
+- it takes image of map from internet and puts it as floor a-plane into scene 
+      (why)
+      - i can turn it off (transparent / invisible)
 
-there could be objects in scene that indicate north (or all NESW sides)
-      or lens flare
+
+- lets say i'm in supermarket and people posted tags about products there
+      - i can walk thru place and phone camera sees product packaging and uses 
+        it as AR marker on top of which it displays data about the product 
+        (other people's experience with product)
+
+- database stores ip address
+
+
+
+- create system to post also images
+
+
     
     
 server filters only tags in circle of 5km and those sends to client
 
 i can edit my tags
 
-publish it only somwehere where people cannot see the code
+publish it only somewehere where people cannot see the code
 
 
 
@@ -42,6 +54,12 @@ done:
 - i can start and stop video background (is eating battery)
         https://jsfiddle.net/sasivarunan/2xLbv7n9/
 - map shows me public tags around me
+- there could be objects in scene that indicate north (or all NESW sides)
+      or lens flare
+- najít způsob, jak mít tagz i usery ve sjednocené nadmořské výšce bez chyb
+          - android říká že moje výška je 0m, iphone 215 m. do jaké výšky
+            postovat tag v tom případě?
+          - použít api k získání nadmořské výšky userovy pozice?
 
 
 

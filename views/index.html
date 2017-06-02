@@ -52,33 +52,52 @@
     <div id="video-container" style=" border- 2px dashed black">
           <div style="width: 100%;
                       position: absolute; top: 0px; left: 0px; z-index: 1;
-                      height: 35px; display: flex; align-items: center;
+                      height: 35px; display: flex; align-items: center; justify-content- space-around;
                       padding: 17px 0px; ">  
             
-                
                 <div id="upperMenu" >
                       <div id="bckWhite" onclick="skyNewCol('powderblue', 0.8)"></div>  
                       <div id="bckBlack" onclick="skyNewCol('black', 0.8)"></div>
                       <div id="bckTransp" onclick="skyNewCol('transparent', 0.1)"></div>
                       <div id="stop" class="upperMenuButton"><span>stop</span></div>
                       <div id="play" class="upperMenuButton"><span>play</span></div>
+                      <div id="out"  class="upperMenuButton"><span>out</span></div>
                 </div>
-                <div id="upperMenuOpen"  onclick="openUpperMenu()"   ><i class="fa fa-angle-right" aria-hidden="true"></i></div>
+                <div id="upperMenuOpen"  onclick="openUpperMenu()"   ><i class="fa fa-angle-right" aria-hidden="false"></i></div>
             
-            <div style="display: flex; flex-direction: row">
-                <label>register here</label>
-                <input id="regName" type="text" placeholder="nick">
-                <input id="regMail" type="email"  placeholder="email">
-                <input id="regPass" type="password"  placeholder="passwrd">
-                <div   id="sendMail" onclick="register()">confirm registration</div>  
-            </div>    
             
-          </div>  
+            
+          </div>
+          <div id="regAndLogin">
+              <div id="regAndLogButtons" style="display: flex; flex-direction: column; align-items: center; justify-content:space-around">
+                <div id="regButton" onclick="registerOpen()" style="cursor: pointer; padding: 20px">register</div>
+                <div id="loginButton" onclick="loginOpen()" style="cursor: pointer; padding: 20px; font-size: 28px;" >login</div>
+                <div id="publicButton" onclick="usePublic()" style="cursor: pointer; padding: 20px">use as unregistered</div>
+              </div>
+              <div id="regDiv" style="">
+                      <div onclick="regLogInitialView()" style="cursor: pointer">go back</div>
+                      <!--label>register here</label-->
+                      <input id="regName" type="text" placeholder="nick">
+                      <input id="regMail" type="email"  placeholder="email">
+                      <input id="regPass" type="password"  placeholder="passwrd">
+                      <div   id="sendMail" onclick="register()">confirm registration</div>  
+                  </div>  
+                
+              <div id="loginDiv" style="">
+                      <div onclick="regLogInitialView()" style="cursor: pointer">go back</div>
+                      <!--label>you can login here</label-->
+                      <input id="loginNick" type="text" placeholder="your nick">
+                      <!--input id="regMail" type="email"  placeholder="email"-->
+                      <input id="loginPass" type="password"  placeholder="your passwrd">
+                      <div   id="login" onclick="login()">login</div>  
+                </div> 
+          </div>
           <video id="camera-stream" style="border- 1px dashed cyan" autoplay></video>
       
           <div id="controls" style="">
-            <div id="reposition" class="button" style="display:flex; align-items:center"><i class="fa fa-compass" aria-hidden="true"></i></div>
-            <div id="addTag" class="button"><!--i class="fa fa-flag" aria-hidden="true"></i--><i class="fa fa-pencil" aria-hidden="true"></i></div>    
+            <div id="reposition" class="button" style="display:flex; align-items:center"><i class="fa fa-compass" aria-hidden="false"></i></div>
+            <div id="openKbd" class="button" style="display:flex; align-items:center"><i class="fa fa-gamepad" aria-hidden="false"></i></div>
+            <div id="addTag" class="button"><!--i class="fa fa-flag" aria-hidden="true"></i--><i class="fa fa-pencil" aria-hidden="false"></i></div>    
             
           </div>
     </div>

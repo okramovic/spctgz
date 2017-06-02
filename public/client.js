@@ -1,8 +1,9 @@
 /*
   				na lat rozdíl  0.000009 = 1m		  //	1”  = 30.89 m
 				  na lon rozdíl  0.000014 = 1,03m		//	1”  = 20.59 m
-
 */
+var username= "public";
+
 var logr= false;
 
 var vid;
@@ -40,7 +41,7 @@ $(function() {
             window.localStream.getTracks().forEach(function(track){ track.stop()});
   })  
   $("#play").click(function(){
-      //alert("stopped?");
+      
       //vid.play();
       //$("#video-container").append('<video id="camera-stream" style="border- 1px dashed cyan" autoplay></video>');
       video();
@@ -239,6 +240,8 @@ $(function() {
             $("#reposition").hide();
             $("#addtagmenu").css("display", "flex");
     
+                  $("#author").val(username)
+    
                   $("#tagLat").val(user.lat)
                   $("#tagLon").val(user.lon)
                   $("#tagAlt").val(user.alt)
@@ -261,15 +264,21 @@ $(function() {
   })
 
   //$("#p").html(" aaaaa ");
-  getTags();
+  
   
   video();
   
   
   getGPS("repo", function(){
     
-                tags.unshift(user)
-                setScene(tags)
+                getTags(function(){
+                
+                        //tags.unshift(user)
+                        //setScene(tags)
+                  
+                });
+    
+                
   });
   
   
@@ -280,7 +289,7 @@ function postTag(cb){
         var newtag = {
             "_type":  "text",
             "text":   $("#text").val(),
-            "author": $("#author").val(),
+            "author": username,//$("#author").val(),
             "col":    $("#selectColor option:selected").val(),
             "size":   parseFloat( $("#tagSize").val()),
             "lat":    parseFloat( $("#tagLat").val() ),//.toFixed(7),
@@ -317,28 +326,33 @@ function postTag(cb){
 
         
 }
-function getTags(){
+function getTags(cb){
   
-        $.get("getTags", function(data, status){
+        var tosend = {username: username, userCoords: user}
+                    console.log("tosend", tosend, "<")
+                          // JSON.stringify
+        $.get("getTags", tosend , function(data, status){
           
                       //console.log("status, data", status, typeof data, "array?",Array.isArray(data), data)
                       //console.log("get data:", data.length, data)
           
                       tags = data;
-                      console.log("tags:", tags.length, tags)
+                      console.log("received tags:", tags.length, tags)
           
                       tags.unshift(user)
                       setScene(tags , function(){
                         
                                 console.log("--------------------------")
-                                console.log("tags after setScene", tags.length, tags)  
+                                console.log("tags after setScene", tags.length, tags)
+                        
+                                if (cb) cb();
                       })
         })
 }
 function setScene(obj,cb){
       
   
-    if (confirm("face SOUTH now")){ 
+    if (confirm("face North now")){ 
       
                     
                     $("a-animation").remove();
@@ -427,7 +441,14 @@ function setScene(obj,cb){
       }
       
       $("#cam").attr("position", obj[0].x + " " + obj[0].alt + " " + obj[0].z);
-      $("#cam").attr("rotation", "0 90 0");    // y +90 camera points to S; // -90 = camera points to N
+      $("#cam").attr("rotation", "0 -90 0");    // y +90 camera points to S; // -90 = camera points to N
+      //$("#cam").attr("fov", 50);
+      
+      var x = parseFloat(obj[0].x) + 100; console.log(typeof x)
+      var y = obj[0].alt + 85;
+      var spherePos = x + " " + y + " " + obj[0].z
+      console.log("north indicator pos", spherePos);
+      $("a-scene").append('<a-sphere position="' + spherePos + '" radius=1 color="red"></a-sphere>')
       
       //$('a-text [value="welcome to Space-tags"]').attr("rotation", "0 0 0");
       //$('#1').attr("rotation", "0 0 0");
@@ -442,6 +463,8 @@ function setScene(obj,cb){
     }
 }
 function getGPS(req, cb) {
+  
+    console.log("gps request")
   
     if (logr) $("#pgps").html(" getting gps");
   
@@ -471,19 +494,38 @@ function getGPS(req, cb) {
                             
               if (req === "repo"){
                   user = {}
-                
+                  
+                  //user = { "lat": 48.191482, "lon":16.295164, "alt": 0}
+                  
                   user.lat = parseFloat(position.coords.latitude.toFixed(7));
                   user.lon = parseFloat(position.coords.longitude.toFixed(7));
                   user.alt = parseFloat(position.coords.altitude.toFixed(2));
+                  
+                  if (user.alt === 0){
+                    
+                      $.get("elevation", user ,function(data, status){
+                        
+                            console.log("elevation",data)
+                            user.alt = parseFloat(data)
+                        
+                             $("#mapAlt").val(user.alt)
+                              
+                            cb()
+                      })
+                  } else {
                 
-                  $("#mapAlt").val(user.alt)
-                  //console.log("user on gps",user.lon, typeof user.lon);
-                  console.log("user on gps",user);
-                  
-                  if (logr) var x = $("#pgps").html()
-                  if (logr) $("#pgps").html( user.lat + '<br>' + user.lon);
-                  if (logr)  setTimeout(function(){ $("#pgps").html(x); $("#pgps").fadeOut(1000) }, 2000)
-                  
+                      $("#mapAlt").val(user.alt)
+                      //console.log("user on gps",user.lon, typeof user.lon);
+                      console.log("user @ gps",user);
+
+                      if (logr) var x = $("#pgps").html()
+                      if (logr) $("#pgps").html( user.lat + '<br>' + user.lon);
+                      if (logr)  setTimeout(function(){ $("#pgps").html(x); $("#pgps").fadeOut(1000) }, 2000)
+
+                      cb()  
+                    
+                  }
+                
               }
           
                     /*$("#userLat").val(user.lat)
@@ -491,7 +533,7 @@ function getGPS(req, cb) {
                     $("#userAlt").val(user.alt)
                     */
           
-              if (cb) cb();
+             // if (cb) cb();
           
         }, function(){
                 if (logr) $("#pgps").html("<br> error in navigator");    
@@ -667,9 +709,10 @@ function video(){
                           });
                         }
                       }
-  
+            console.log("video to play")
             navigator.mediaDevices.getUserMedia(videoOptions).then(function(stream){
 
+                        //alert("video")
                         if (logr) $("#pvid").html("sukces video func");
                         if (logr) $("#pvid").fadeOut(5000);
               
@@ -678,6 +721,7 @@ function video(){
                         vid = document.getElementById('camera-stream');
                         vid.src = window.URL.createObjectURL(stream);//.play();
                         vid.play();
+                        $("#camera-stream").show();
                         
                         //$("#controls").height($("#video-container").height() - $("#camera-stream").height())
               
@@ -687,6 +731,8 @@ function video(){
                         if (logr) $("#pvid").fadeOut(5000);$("#pvid").html(" !! no user media !!"); 
                         if (logr) $("#pvid").fadeOut(5000); $("#pvid").fadeOut(4000);
                         $(":file").fadeOut(4000);
+              //alert("no video")
+                        $("#camera-stream").hide();
                         
             })
     
@@ -734,3 +780,95 @@ function formatD(msg){
   //alert(msg);
   //return
 }
+function register(){
+
+        //var obj = {}
+        $.post("register", JSON.stringify({"nick": $("#regName").val(), "email": $("#regMail").val(), "pass": $("#regPass").val()}), 
+               function(data, status){
+          
+                    console.log("status",status, data);
+                    console.log("test")
+          
+                    if (data === "occupied"){
+                      
+                            console.log("cant")
+                            $("#sendMail").hide()
+                            $('<label id="warning">this email is already in use<br>try another one</label>').appendTo($("#regDiv"))
+                            setTimeout(function(){
+                              
+                                    $("#warning").fadeOut(2000, function(){ $("#warning").remove(); $("#sendMail").show();})
+                                    
+                            }, 4000)
+                      
+                      
+                    } else {
+                      
+                            $("#regDiv").append('<label id="warning">registration successful, check your email, incl. spam</label>')
+                            $("#regDiv input, #regDiv div").hide();
+                            console.log("alles ok w reg")
+                    }
+          
+        })
+}
+function login(){
+  
+              var x = JSON.stringify({nick: $("#loginNick").val(),pass: $("#loginPass").val()})
+  
+              console.log(x)
+              $.post("/login", x, 
+                     function(data, status,xhr){
+
+                        //console.log(data)//, status)
+                        //console.log("test")
+                
+                        if (data !== "fail"){
+                          
+                              //$("#loginDiv").hide();
+                              //$("#regDiv").hide();
+                              $("#regAndLogin").hide()
+                              //alert("| you inlogged |");
+                          
+                              $("#controls").css("display", "flex");
+                              $("#addTag").show();
+                          
+                              username = $("#loginNick").val().toString()
+                              console.log("username", username);
+                          
+                          
+                        } else if (status != "success" || data === "fail") {
+                          
+                               console.log("user not found")
+                              $("#login").html("wrong nick or pass, try again");
+                              
+                              setTimeout(function(){ $("#login").html("login") }, 3000)
+                             
+                        
+                        }
+                    console.log("d s ",data, status,xhr)
+
+              })
+}
+function usePublic(){
+  
+      $("#controls").css("display", "flex");
+      $("#addTag").hide();
+  
+      $("#loginButton").css("font-size", "17px");
+      $("#publicButton").hide();
+  
+      $("#regAndLogButtons").css({ //"height": "35px",
+                                  "display":"flex",
+                                  "flex-direction": "row",
+                                  "justify-content": "space-around",
+                                  "align-items": "center"})
+  
+      $("#regAndLogin").css({ "position":"absolute", "top": "0px", 
+                              "height": "35px",
+                              "display":"flex",
+                              "flex-direction": "row"});
+      
+      
+  
+}
+
+//function filterTo5km(){}
