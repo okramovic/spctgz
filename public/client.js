@@ -50,6 +50,8 @@ $(function() {
   $("#reposition").on('click', function(){
           
         $("#addTag").hide()
+        $("#openKbd").hide()
+    
         
         console.log("click repo```````")//, user.lat, user.lon);
         //console.log("user before @", user)
@@ -74,7 +76,7 @@ $(function() {
         }
         */
         //console.log("user @", user.lat, user.lon);
-        map(user.lat, user.lon, tags)
+        map("mapid", user.lat, user.lon, tags)
     
         //console.log ("click finito")
     
@@ -83,7 +85,7 @@ $(function() {
             
               getGPS("repo", function(){
                 
-                      map(user.lat, user.lon)
+                      map("mapid",user.lat, user.lon)
                       console.log("by gps updated")
                       newlat = user.lat;
                       newlon = user.lon
@@ -189,6 +191,8 @@ $(function() {
                                       $("#repositionMenu").hide();
                                       $("#reposition").show()
                                       $("#addTag").show()
+                                      $("#openKbd").show()
+                                      
                         
                                       //$("#mapid").empty()
                       })
@@ -210,6 +214,7 @@ $(function() {
                                       $("#repositionMenu").hide();
                                       $("#reposition").show()
                                       $("#addTag").show()
+                                      $("#openKbd").show()
                         
                                       //$("#mapid").empty()
                           })
@@ -230,12 +235,16 @@ $(function() {
               $("#repositionMenu").hide()
               $("#reposition").show()
               $("#addTag").show()
+              $("#openKbd").show()
               //repoCoords.lat = user.lat;
               //repoCoords.lon = user.lon;
   })
   $("#addTag").on('click', function(){
           
-            console.log("click ```````");
+          map("map2", user.lat, user.lon, tags, "add_tag")
+    
+            //console.log("click ```````");
+            $("#openKbd").hide()
             $("#addTag").hide();
             $("#reposition").hide();
             $("#addtagmenu").css("display", "flex");
@@ -250,25 +259,24 @@ $(function() {
   $("#closeTagMenu").click(function(){
           
             $("#addtagmenu").hide();
-            $("#addTag").show()
+            $("#addTag").show();
+            $("#openKbd").show()
             $("#reposition").show();
   })
   $("#submit").click(function(){
     
-            console.log("submit clicked")
+          //console.log("submit clicked")
     
           postTag(function(){
               $("#addtagmenu").hide();
+            
               $("#addTag").show()  
+              $("#openKbd").show()
           })
   })
 
   //$("#p").html(" aaaaa ");
-  
-  
   video();
-  
-  
   getGPS("repo", function(){
     
                 getTags(function(){
@@ -545,27 +553,38 @@ function getGPS(req, cb) {
           console.log("|||||||   no navigator!!");
     }
 }
-function map(ulat, ulon, t){
+function map(divname, ulat, ulon, t, msg){
           //console.log("map?", ulat, ulon, cntr);
-          //console.log("user at " + user.lat + " , " + user.lon);
+          console.log(msg+ ", user at " + user.lat + " , " + user.lon);
           //$("#mapDiv").empty();
-          $("#mapid").replaceWith('<div id="mapid" class="mapid"></div>')  //$("#mapDiv")
+          $("#" + divname).replaceWith('<div id="' + divname + '" class="mapid"></div>')  //$("#mapDiv")
+          //$("#map").replaceWith('<div id="map" class="mapid"></div>')  //$("#mapDiv")
   
-               if (user.lat === undefined) var mymap = L.map('mapid').setView([0, 0], 8);          
-          else if (user.lat !== undefined) var mymap = L.map('mapid').setView([user.lat, user.lon], 17);          
+               if (user.lat === undefined) var mymap = L.map(divname).setView([0, 0], 8);          
+          else if (user.lat !== undefined) var mymap = L.map(divname).setView([user.lat, user.lon], 17);          
 
+          //var add_tag = L.map('map').setView([0,0], 17);// [user.lat, user.lon]
+  
           //if      (layer === undefined) {console.log("layer undefined");}
           //else if (layer !== undefined) {console.log("layer", layer);}
   
           var layer
-          layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', 
-                      { maxZoom: 22,
-                        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',// +
-                        //'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                        //'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                        id: 'mapbox.streets'
-          }).addTo(mymap); //or removeFrom 
-  
+         // if (msg === undefined){
+                    
+                    layer = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', 
+                                { maxZoom: 22,
+                                  attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',// +
+                                  //'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                                  //'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                                  id: 'mapbox.streets'
+                    }).addTo(mymap); //or removeFrom 
+          /*} else if (msg === "add_tag"){
+                var layer2 = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', 
+                            { maxZoom: 22,
+                              attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a>',
+                              id: 'mapbox.streets'
+                }).addTo(add_tag);
+          }*/
 
           repoCoords.lat = user.lat;
           repoCoords.lon = user.lon;

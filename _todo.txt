@@ -26,7 +26,7 @@
 
     
     
-server filters only tags in circle of 5km and those sends to client
+
 
 i can edit my tags
 
@@ -54,6 +54,7 @@ done:
 - i can start and stop video background (is eating battery)
         https://jsfiddle.net/sasivarunan/2xLbv7n9/
 - map shows me public tags around me
+- server filters only tags in circle of 5km and those sends to client
 - there could be objects in scene that indicate north (or all NESW sides)
       or lens flare
 - najít způsob, jak mít tagz i usery ve sjednocené nadmořské výšce bez chyb

@@ -72,14 +72,14 @@ a-scene{
 .button{
   height: 50px;
   cursor: pointer;
-  border: 3px solid black;
+  border- 3px solid black;
   border-radius: 4px;
   font-size: 22px;
   margin: 4px; /*this has to stay minimum 4px if buttons have box-shadow*/
   padding: 5px 10px;
   
   background-color: white ;
-  box-shadow: 0px 0px 3px 3px white;
+  box-shadow- 0px 0px 3px 3px white;
   
   z-index: 1;
   
@@ -227,13 +227,17 @@ p {
   background-color: transparent;
   text-shadow: 0px 0px 3px white;
   
-  border: none;
+  border: 1px solid white;
   
   text-align: center;
   
   background-image:none;
   appearance: none;
   -moz-appearance: none;
+}
+#addtagmenu input[type=text]:focus, #addtagmenu input[type=number]:focus{
+  
+  background-color: white;
 }
 #addtagmenu select{
   height: 35px;
@@ -243,7 +247,7 @@ p {
   color: black;
   background-color: transparent;
   text-shadow: 0px 0px 3px white;
-  border: none;
+  border: 1px solid white;
   
   text-align: center;
 	text-align: -webkit-center;
@@ -268,6 +272,10 @@ p {
   color: gray;
   
 }
+#addtagmenu label{
+  padding: 5px 10px;
+  background-color: rgba(255,255,255,0.7)
+}
 #reposition{
   z-index: 1;
 }
@@ -291,12 +299,21 @@ p {
   position: absolute;
   bottom: 0px; 
 }
+#repositionMenu input[type=text]:focus, #repositionMenu input[type=number]:focus{
+  
+  background-color: white;
+}
+
 #repositionMenu label{
   margin-top: 5px;
   margin-bottom: 5px;
     
+  padding: 5px 10px;
   font-size: 15px;
   text-shadow: 0px 0px 2px white;
+  
+  background-color: rgba(255,255,255,0.7);
+  border-radius: 5px;
 }
 #numericDiv{
   display: none;
@@ -349,8 +366,17 @@ input[type="number"]:focus {
     appearance: none;
     -webkit-appearance: none !important;
 }*/
-
+.mapid{
+  border: 2px solid orange;
+  height: 100%; 
+  width: 100%;
+}
 #mapid { 
   height: 100%; 
   width: 100%;
+  
+}
+#map2{
+  height- 100%; 
+  width- 100%;
 }

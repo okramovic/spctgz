@@ -103,7 +103,6 @@
     </div>
     
     <div id="repositionMenu">
-          
           <div id="mapDiv" style="width: 100%; height: 200px; border- 1px dashed green">
               <div id="mapid" class="mapid"></div>
           </div>
@@ -158,32 +157,44 @@
     
     
     <div id="addtagmenu">
-      <div style="width:100%; display:flex; justify-content: flex-end;">
-          <div id="closeTagMenu" style="width/20%; padding: 20px ">close</div>
-      </div>  
-      <div style="display: flex; flex-direction: column; align-items:center">
-        
-        
-            <input id="text"   type="text" class="tagMenuItem" placeholder="message" value="">
-            <input id="author" type="text" class="tagMenuItem" placeholder="author">
-        
-            <select id="selectColor" class="tagMenuItem" style="">
-                    <option disabled>choose Tag's color</option>
-                    <option value="white">white</option>
-                    <option value="blue">blue</option>
-                    <option value="red">red</option>
-                    <option value="black">black</option>
-            </select> 
-            <input id="tagSize"   type="number" class="tagMenuItem" placeholder="size">
+        <div id="mapDiv2" style="width: 100%; height: 200px; border: 1px dashed green">
+          <div id="map2" class="mapid" style="" ></div>
+        </div>
+        <div style="width:100%; display:flex; justify-content: space-between; align-items: center">
+            <div style="width: 20%"></div>
+            <div style="width: 50%; display: flex; justify-content: center">
+                <div id="what"   class="button"  onclick="whatOpen()">what</div>
+                <div id="where"   class="button" onclick="whereOpen()">where</div>
 
-            <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
-            <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
-            <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
-            <div id="submit" class="button">place into space</div>
-            <div id="map"  style="padding: 20px" >map</div>
-        
-        
-      </div>  
+            </div>
+            <div style="width: 20%; display: flex; justify-content: flex-end">
+                <div id="closeTagMenu" style="padding: 5px 10px">close</div>  
+            </div>
+            
+        </div>
+      
+        <div id="whatDiv" style="display: flex; flex-direction: column; align-items:center">
+
+              <input id="text"   type="text" class="tagMenuItem" placeholder="message" value="">
+              <input id="author" type="text" class="tagMenuItem" placeholder="author">
+
+              <select id="selectColor" class="tagMenuItem" style="">
+                      <option disabled>choose Tag's color</option>
+                      <option value="white">white</option>
+                      <option value="blue">blue</option>
+                      <option value="red">red</option>
+                      <option value="black">black</option>
+              </select> 
+        </div>  
+        <div id="whereDiv" style="display: none; flex-direction: column; align-items:center">
+          
+              <input id="tagSize"   type="number" class="tagMenuItem" placeholder="size">
+
+              <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
+              <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
+              <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
+        </div>
+        <div id="submit" class="button" style="padding: 10px 10px">place into space</div>
     </div>
     
     

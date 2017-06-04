@@ -15,7 +15,6 @@ function registerOpen(){
       $("#regDiv").css("display", "flex");
       
 }
-
 function loginOpen(){
   
       $("#regAndLogin").css({ "position":"static", //"top": "0px", 
@@ -64,9 +63,18 @@ function skyNewCol(col, opa){
         //$("a-scene").add('<a-gradient-sky material="shader: gradient; topColor: 255 255 255; bottomColor: 0 0 0;"></a-gradient-sky>');
         //$("a-gradient-sky").attr("material", "shader: gradient; topColor: 255 255 255; bottomColor: " + "0 0 0;");
 }
-
-
-
+function whatOpen(){
+  
+        $("#whatDiv").show()
+        $("#whereDiv").hide()
+  
+}
+function whereOpen(){
+  
+        $("#whatDiv").hide()
+        $("#whereDiv").css("display", "flex") 
+  
+}      
 
 function repoCamera(lat,lon,alt, cb){
   
