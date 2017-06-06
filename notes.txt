@@ -1,3 +1,12 @@
+stuff used:
+    cdn links: https://cdnjs.com/#
+
+    upload file by client to browser: http://jsfiddle.net/vacidesign/ja0tyj0f/
+    images @ cloudinary.com  
+          (could be also https://www.filestack.com/pricing/free)
+    upload img from browser to cloudinary made easy:
+          http://blog.mkucz.com/?view=classic
+
 https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
 to check lat long distance properly:   

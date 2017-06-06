@@ -26,6 +26,16 @@
   <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
   <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
     
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js" ></script>  
+    
+      
+      <!--script type="text/javascript" src="cloudinary/jquery.ui.widget.js"></script>
+      <script type="text/javascript" src="cloudinary/jquery.iframe-transport.js"></script>
+      <script type="text/javascript" src="cloudinary/jquery.fileupload.js"></script>
+      <script type="text/javascript" src="cloudinary/jquery.cloudinary.js"></script-->
+
+  
+    
     <script src="client.js"></script>
     <script src="client2.js"></script>
     
@@ -158,10 +168,15 @@
     
     <div id="addtagmenu">
         <div id="mapDiv2" style="width: 100%; height: 200px; border: 1px dashed green">
-          <div id="map2" class="mapid" style="" ></div>
+            <div id="map2" class="mapid" style="" ></div>
         </div>
         <div style="width:100%; display:flex; justify-content: space-between; align-items: center">
-            <div style="width: 20%"></div>
+          
+            <div  style="width: 20%; display: flex; justify-content: flex-start; align-items: center">
+                <div id="postPic" onclick="imgUpload()" class="button">
+                    <i class="fa fa-picture-o" aria-hidden="false"></i>  
+                </div>
+            </div>
             <div style="width: 50%; display: flex; justify-content: center">
                 <div id="what"   class="button"  onclick="whatOpen()">what</div>
                 <div id="where"   class="button" onclick="whereOpen()">where</div>
@@ -174,7 +189,7 @@
         </div>
       
         <div id="whatDiv" style="display: flex; flex-direction: column; align-items:center">
-
+              <label id="imgCaptionLabel">img caption (optional)</label>
               <input id="text"   type="text" class="tagMenuItem" placeholder="message" value="">
               <input id="author" type="text" class="tagMenuItem" placeholder="author">
 
@@ -193,6 +208,19 @@
               <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
               <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
               <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
+        </div>
+        <!--div-->
+        <div id="imgUpload" style="border: 2px solid blue; background-color: white; 
+                                           display: none; flex-direction: column; align-items: center;
+                                           width: 100%; height- 80px">  
+                      <input  type="file" id="imgToUp" style="border: 2px solid green; font-size: 15px; height: 20px; width: 50%"/>
+                      <img id="img" style="border: 1px dashed green; display: none">
+        </div>
+            
+        <!--/div-->
+        <div id="imgWhat"  style="display: none; flex-direction: column; align-items:center">
+              <input id="imgCaption"   type="text" class="tagMenuItem" placeholder="message" value="">
+              <input id="imgAuthor" type="text" class="tagMenuItem" placeholder="author">
         </div>
         <div id="submit" class="button" style="padding: 10px 10px">place into space</div>
     </div>

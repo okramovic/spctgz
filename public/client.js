@@ -2,6 +2,14 @@
   				na lat rozdíl  0.000009 = 1m		  //	1”  = 30.89 m
 				  na lon rozdíl  0.000014 = 1,03m		//	1”  = 20.59 m
 */
+/*cloudinary.cloudinary_js_config();
+$(function() {
+  if($.fn.cloudinary_fileupload !== undefined) {
+    $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload();
+  }
+});
+cloudinary.uploader.image_upload_tag('image_id', { callback: cloudinary_cors });
+*/
 var username= "public";
 
 var logr= false;
@@ -12,6 +20,9 @@ var vid;
 var cntr = 0;
 var tags;
 
+var postType = "text";
+var file;
+
 var _minLat, _minLon;
 var repoCoords = {};
 var newlat; var newlon;
@@ -21,12 +32,14 @@ var userOld, userNew;
 
 //var cam = { "name": "cam","lat": 48.191482, "lon":16.295164, "alt": 0}
 var user = undefined;            //= {"lat": undefined, "lon"//: undefined}
-
-    user = {}; //user.lat = cam.lat; user.lon = cam.lon; user.alt = cam.alt
+user = {}; //user.lat = cam.lat; user.lon = cam.lon; user.alt = cam.alt
 
 
 
 $(function() {
+  
+                      /*var query = { author: "kokosak"};
+                      $.post("img" , JSON.stringify(query) , function(data, status){})*/
   
   if (logr) {$("#xx").html(window.innerHeight + " " +window.innerWidth); $("#xx").fadeOut(3000);}
   
@@ -247,6 +260,8 @@ $(function() {
             $("#openKbd").hide()
             $("#addTag").hide();
             $("#reposition").hide();
+            $("#imgCaptionLabel").hide();
+    
             $("#addtagmenu").css("display", "flex");
     
                   $("#author").val(username)
@@ -254,6 +269,9 @@ $(function() {
                   $("#tagLat").val(user.lat)
                   $("#tagLon").val(user.lon)
                   $("#tagAlt").val(user.alt)
+    
+                  //x = parseFloat(parseFloat($("#tagLat").val()).toFixed(7) )
+                  //console.log("test lat", typeof x, x)
 
   })
   $("#closeTagMenu").click(function(){
@@ -266,13 +284,64 @@ $(function() {
   $("#submit").click(function(){
     
           //console.log("submit clicked")
-    
+          if (postType === "text"){
           postTag(function(){
               $("#addtagmenu").hide();
             
+              $("#reposition").show();
               $("#addTag").show()  
               $("#openKbd").show()
           })
+            
+            
+          } else if (postType === "img"){
+                console.log("image posted?")
+              
+                doUpload(file, function(re){
+                                
+                                  var query = { "author":  username,
+                                                        "_type":   "img",
+                                                        "caption": $("#text").val(),
+                                                        "col":     $("#selectColor option:selected").val(),
+                                                        "width":   parseFloat( $("#tagSize").val()),
+                                                        "height":  parseFloat( $("#tagSize").val()),
+
+                                                        "lat":     parseFloat(parseFloat($("#tagLat").val()).toFixed(7) ),
+                                                        "lon":     parseFloat(parseFloat($("#tagLon").val()).toFixed(7) ), 
+                                                        "alt":     parseFloat(parseFloat($("#tagAlt").val()).toFixed(7) ),
+
+                                                        "url":     re.secure_url,
+                                                 //"userCoords": user
+                                              }
+                                          //"lon":    parseFloat( $("#tagLon").val() ),
+                                          //"alt":    parseFloat( $("#tagAlt").val() )
+                              console.log("test lat", parseFloat( $("#tagLat").val() ).toFixed(7) )
+
+                              $.post("img" , JSON.stringify(query) , function(data, status){
+                                                      if (data==="ok") {
+                                                              
+                                                                getTags()
+                                                        
+                                                                $("#addtagmenu").hide();
+                                                        
+                                                                $("#reposition").show();
+                                                                $("#openKbd").show();
+                                                                $("#addTag").show();  
+                                                                
+                                                                
+                                                      }
+                                                      //tags = data;
+                                                      console.log(data)//"after image posted - updated tags",tags)
+                                                      /*tags.unshift(user)
+                                                      setScene(tags, function(){
+
+                                                              console.log("---- posted, scene set to new one")
+                                                              //cb()
+                                                      })*/
+                              })
+                })
+          }  
+          postType = "text";
   })
 
   //$("#p").html(" aaaaa ");
@@ -851,7 +920,7 @@ function login(){
                               $("#addTag").show();
                           
                               username = $("#loginNick").val().toString()
-                              console.log("username", username);
+                              console.log("user logged in:", username);
                           
                           
                         } else if (status != "success" || data === "fail") {
@@ -870,7 +939,7 @@ function login(){
 function usePublic(){
   
       $("#controls").css("display", "flex");
-      $("#addTag").hide();
+      //$("#addTag").hide();
   
       $("#loginButton").css("font-size", "17px");
       $("#publicButton").hide();
@@ -889,5 +958,77 @@ function usePublic(){
       
   
 }
-
 //function filterTo5km(){}
+function imgUpload(){
+  
+          postType = "img";
+          //$("#whatDiv").hide(); $("#whereDiv").hide();
+          $("#imgUpload").css("display", "flex");
+          $("#imgToUp").show()
+          $("#imgCaptionLabel").show()
+          
+          $('#imgToUp').change(function(){   
+          
+          
+            
+            
+                    console.log("upload", this)
+                    console.log("files",this.files[0])
+                    //console.log("files", this.files)
+            
+                    if (this.files && this.files[0]) {  console.log("has files")
+                      
+                              var reader  = new FileReader();
+                              console.log(reader)
+                              file = this.files[0] //reader.readAsDataURL(...)
+                              //console.log("File name: " + file.name);                        
+                                          
+                              reader.readAsDataURL(this.files[0]);
+                                                      
+                              console.log("test end", file)
+                              var data
+                              reader.onload = function(ev) { 
+                                
+                                    //console.log("redaer")
+                                    //var 
+                                    data = reader.result//reader.result
+                                    //console.log(typeof data, "\n", data )
+                                    //var file = reader.readAsDataURL(this.files[0]); //$('#imgToUp').files[0];
+                                    
+                                    $('#img').attr("src",data);
+                                    $('#img').show();
+                                    $('#img').css({"width": "100px", "height": "100px"});
+
+                                /*if (file) {
+                                   reader.readAsDataURL(file); //reads the data as a URL
+                               } else {
+                                   preview.src = "";
+                               }*/
+                              }
+                      }
+        })
+}
+var doUpload = function(file, cb){
+                                          //var files = document.getElementById("myid").files; 
+                    var formData = new FormData();
+                    formData.append('file', file);                        //for (file of files) { formData.append('file', file);}
+                    formData.append("api_key", 584391114359699);
+                    formData.append("upload_preset", "preset1");
+  
+                    var xhr = new XMLHttpRequest();
+                                          xhr.open('POST', "https://api.cloudinary.com/v1_1/okram/image/upload", true);
+                                          xhr.onload = function () {
+                                              if (xhr.readyState === xhr.DONE) {
+                                                  if (xhr.status === 200) {
+                                                      var resp = JSON.parse(xhr.responseText)
+                                                      console.log("url?",resp.secure_url)
+                                                    
+                                                      console.log(JSON.parse(xhr.responseText));
+                                                      cb(resp)
+                                                  } else {
+                                                      console.log("error with uploading");
+                                                  }
+                                              }
+                                          };
+                    xhr.send(formData);
+}

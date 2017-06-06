@@ -1,3 +1,12 @@
+- create system to post also images
+
+- i can edit my tags
+      - it shows me all my tags (the text and latlon or eve address)
+      - i choose one to edit and it opens addtagMenu with all data filled in
+      - it should also store previous versions of all tags under same _id
+
+- user can teleport only within 5 km from his gps coords
+
 - create login and user system
       - user musí při registraci napsat proč se chce přidat (alespoň 100 slov a 
         až já to schválím, jeho účet bude aktivní/použitelný)
@@ -17,20 +26,16 @@
         it as AR marker on top of which it displays data about the product 
         (other people's experience with product)
 
+
+- user can style more his tag (like place it vertically like neons on hotels)
+            -decide about rotation
+
+
+
 - database stores ip address
 
+- publish it only somewehere where people cannot see the code
 
-
-- create system to post also images
-
-
-    
-    
-
-
-i can edit my tags
-
-publish it only somewehere where people cannot see the code
 
 
 

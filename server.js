@@ -1,5 +1,6 @@
 // init project
 //var http = require('http');
+var fs = require('fs')
 var request = require("request");
 var express = require('express');
 var app = express();
@@ -7,6 +8,7 @@ var mongo = require('mongodb').MongoClient;
 
 var nodemailer = require('nodemailer');
 var sendmail = require('sendmail')();
+var cloudinary = require('cloudinary');
 
 // we've started you off with Express, but feel free to use whatever libs or frameworks you'd like through `package.json`.
 
@@ -131,6 +133,87 @@ app.post("/postTag", function (request, response) {
 });
 
 
+
+
+/*  cloudinary.config({ 
+      cloud_name: 'okram', 
+      api_key:     process.env.cloudinaryapik, 
+      api_secret:  process.env.cloudinarysecret
+    });*/
+app.post("/img", function(req,res){
+  
+      console.log("img post")
+      var imgdata = "";
+      
+      req.setEncoding("utf8")
+      req.on("data", function(data){
+        
+          imgdata += data
+          console.log("dt",data)
+        
+      })
+      req.on("end", function(){
+            //console.log(req)
+            //var toUpl=req.query.author
+            imgdata = JSON.parse(imgdata)
+            console.log("imgdata", typeof imgdata, imgdata)
+            //console.log("toUpl", typeof toUpl, toUpl);
+            //console.log("end of file receiving");console.log("img>",imgdata)
+            
+            var url = "mongodb://public" + ":" + process.env["publicpass"] + "@ds151661.mlab.com:51661/spacetags1"
+            mongo.connect(url, function(er, db){
+                    if (er) throw(er)
+                    else{
+                            console.log("img upload db connect")
+                      
+                            db.collection("_001").insertOne(imgdata,function(er, rslt){
+                        
+                                        if (er) throw(er)
+                                        else{ res.send("ok")
+                                              res.end();
+                                              db.close()
+
+                                              //db.close()
+
+
+                                              /*db.collection("_001").find().toArray(function(error, result){
+                                                    if (error) throw(error)
+                                                    else{
+
+                                                          /*filterByDistance(result, req.query.userCoords, 5, function(rslt){
+
+                                                                    //console.log(rslt)
+                                                                    res.send(rslt);
+                                                                    res.end()
+
+                                                                    db.close();
+
+                                                          });
+                                                      
+                                                          //console.log(result)
+                                                          //response.sendStatus(200); 
+                                                          /*res.send(result)
+                                                          res.end()
+                                                          db.close()
+                                                    }
+                                              })*/
+                                        }
+                              })
+                    }
+            })
+               /* //var img=
+                  fs.writeFile("public/test.txt", "hi omg", function(err){
+                  if (err) throw (err)
+                  else console.log("file has been done")
+                  })
+        
+                cloudinary.uploader.upload("https://cdn.glitch.com/0b27cb66-047a-466b-af36-c13c15d87775%2FScreen%20Shot%202017-03-04%20at%2000.04.06.png?1490654070488", function(result) { 
+            
+                                console.log("img upload result",result)                 
+                });*/
+      })
+   
+})
 
 app.post("/register", function(req, res){
   
