@@ -36,6 +36,8 @@ user = {}; //user.lat = cam.lat; user.lon = cam.lon; user.alt = cam.alt
 
 
 
+
+
 $(function() {
   
                       /*var query = { author: "kokosak"};
@@ -303,8 +305,9 @@ $(function() {
                                                         "_type":   "img",
                                                         "caption": $("#text").val(),
                                                         "col":     $("#selectColor option:selected").val(),
-                                                        "width":   parseFloat( $("#tagSize").val()),
-                                                        "height":  parseFloat( $("#tagSize").val()),
+                                                        "size":    parseFloat( $("#tagSize").val()),
+                                                        "width":   re.width,
+                                                        "height":  re.height,
 
                                                         "lat":     parseFloat(parseFloat($("#tagLat").val()).toFixed(7) ),
                                                         "lon":     parseFloat(parseFloat($("#tagLon").val()).toFixed(7) ), 
@@ -507,7 +510,11 @@ function setScene(obj,cb){
                                     '</a-text>')
           } else if (obj[i]._type === "img"){
             
-                    $("a-scene").append('<a-image src="' + obj[i].url + '" width="'+ obj[i].width + '" height="'+ obj[i].height + '"' +
+                    var w = obj[i].size 
+                    var h = parseFloat((   (obj[i].height/obj[i].width) * obj[i].size).toFixed(2)  )
+                    //var h = parseFloat(((400/300) * 12).toFixed(2))
+            
+                    $("a-scene").append('<a-image src="' + obj[i].url + '" width="'+ w + '" height="'+ h + '"' +
                                         ' position="' + obj[i].pos + '" >' +
                                         '<a-animation attribute="rotation" dur="3000" fill="forwards" from="0 0 0" ' +
                                         'to="0 360 0" easing="linear" repeat="indefinite"></a-animation>' +

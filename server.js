@@ -103,7 +103,7 @@ app.post("/postTag", function (request, response) {
                         if (er) throw(er)
                         else{
                         
-                        
+                              informMarko(wholedata)
                               //db.close()
                               
                           
@@ -172,7 +172,7 @@ app.post("/img", function(req,res){
                                         else{ res.send("ok")
                                               res.end();
                                               db.close()
-
+                                              informMarko(imgdata)
                                               //db.close()
 
 
@@ -201,7 +201,7 @@ app.post("/img", function(req,res){
                               })
                     }
             })
-               /* //var img=
+            /* //var img=
                   fs.writeFile("public/test.txt", "hi omg", function(err){
                   if (err) throw (err)
                   else console.log("file has been done")
@@ -466,17 +466,17 @@ function filterByDistance(initialArray, user, dist, cb){
       }
   
 }
-function informMarko(newuser){
+function informMarko(data){
   
           sendmail({
                     from: 'admin@spacetagz.com',
                     to: "okram@protonmail.ch",
-                    subject: 'new user registered ✔', // Subject line
+                    subject: 'new activity on spctgz ✔', // Subject line
                     text: 'text Hello word text', // plain text body
-                    html: '<p>new user is</p>' + 
-                    '<p>nick: ' + newuser.nick + '</p>' + 
-                    '<p>reg. mail: ' + newuser.email + '</p>' + 
-                    '<p>why: ' + newuser.why + '</p>'
+                    html: '<h4>new activity:</h4>' + 
+                    '<p> ' + JSON.stringify(data) + '</p>'
+                    //'<p>reg. mail: ' + newuser.email + '</p>' + 
+                    //'<p>why: ' + newuser.why + '</p>'
                     }, 
                     function(err, reply) {
                     if (err) {
