@@ -871,7 +871,8 @@ function formatD(msg){
 function register(){
 
         //var obj = {}
-        $.post("register", JSON.stringify({"nick": $("#regName").val(), "email": $("#regMail").val(), "pass": $("#regPass").val()}), 
+        $.post("register", JSON.stringify({"nick": $("#regName").val(), "email": $("#regMail").val(), 
+                                           "pass": $("#regPass").val(), "why": $("#regWhy").val() }), 
                function(data, status){
           
                     console.log("status",status, data);
@@ -889,11 +890,19 @@ function register(){
                             }, 4000)
                       
                       
-                    } else {
+                    } else if (data === "ok"){
                       
                             $("#regDiv").append('<label id="warning">registration successful, check your email, incl. spam</label>')
                             $("#regDiv input, #regDiv div").hide();
-                            console.log("alles ok w reg")
+                            console.log("alles ok w reg");
+                            username = $("#regName").val();
+                            console.info("username", username)
+                            $("#regAndLogin").fadeOut(4000, function(){
+                              
+                                  //$("#controls").show();
+                                  $("#controls").css("display", "flex");
+                              
+                            })
                     }
           
         })

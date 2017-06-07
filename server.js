@@ -237,7 +237,7 @@ app.post("/register", function(req, res){
                     
                           if (er) throw(er)
                           else{
-                            
+                            console.log("db pass connect");
                             var query = {//"nick": newUser.nick, 
                                          "email": newUser.email}
                             
@@ -255,30 +255,43 @@ app.post("/register", function(req, res){
                                         } else if (result.length === 0){   // welcome 
                                             
                                               console.log("no such man on board. welcome");
-                                              res.sendStatus(200)
+                                                
+                                            try {
                                               
-                                              /*sendmail({
-                                                          from: 'no-reply@spacetagz.com',
-                                                          to: newUser.email,
-                                                          subject: '✔ your Space-tagz registration info ✔', // Subject line
-                                                          text: 'text Hello word text', // plain text body
-                                                          html: '<p>you requested registration at spacetagz.com</p>' + 
-                                                                '<p>your nick: ' + newUser.nick + '</p><br>' + 
-                                                                '<p>reg. mail: ' + newUser.email + '</p><br>' + 
-                                                                '<p>your pass: ' + newUser.pass + '</p>' +
-                                                                '</br>' + '<p>enjoy</p>' ,
-                                                          }, 
-                                                          function(err, reply) {
-                                                          if (err) {
-                                                                      res.sendStatus(500);
-                                                                      console.log(err && err.stack);
+                                                db.collection("users_001").insertOne(newUser, function(){
+                                                  console.log("inserted")
+                                                  
+                                                  sendmail({
+                                                                from: 'no-reply@spacetagz.com',
+                                                                to: newUser.email,
+                                                                subject: '✔ your Space-tagz registration info ✔', // Subject line
+                                                                //text: 'text Hello word text', // plain text body
+                                                                html: '<p>you requested registration at spacetagz.com</p><br/>' + 
+                                                                      '<p>your nick: ' + newUser.nick + '</p>' + 
+                                                                      '<p>reg. mail: ' + newUser.email + '</p>' + 
+                                                                      '<p>your pass: ' + newUser.pass + '</p>' +
+                                                                      '</br>' + '<p>enjoy</p>' ,
+                                                                }, 
+                                                                function(err, reply) {
+                                                                if (err) {
+                                                                            res.sendStatus(500);
 
-                                                          } else {
+                                                                            console.log(err && err.stack);
 
-                                                            console.dir(reply);
-                                                            res.sendStatus(200);
-                                                          }
-                                              });*/
+                                                                } else {
+
+                                                                  console.dir(reply);
+                                                                  //res.sendStatus(200);
+                                                                  res.send("ok")
+                                                                }
+                                                  });
+                                                  informMarko(newUser)
+                                                  
+                                              })
+                                              } catch (e) {
+                                                 //print (e);
+                                              };
+                                              
                                         }
                                     }
                               
@@ -451,5 +464,32 @@ function filterByDistance(initialArray, user, dist, cb){
       function degreesToRadians(degrees) {
           return degrees * Math.PI / 180;
       }
+  
+}
+function informMarko(newuser){
+  
+          sendmail({
+                    from: 'admin@spacetagz.com',
+                    to: "okram@protonmail.ch",
+                    subject: 'new user registered ✔', // Subject line
+                    text: 'text Hello word text', // plain text body
+                    html: '<p>new user is</p>' + 
+                    '<p>nick: ' + newuser.nick + '</p>' + 
+                    '<p>reg. mail: ' + newuser.email + '</p>' + 
+                    '<p>why: ' + newuser.why + '</p>'
+                    }, 
+                    function(err, reply) {
+                    if (err) {
+                    //res.sendStatus(500);
+
+                    console.log(err && err.stack);
+
+                    } else {
+
+                    console.dir(reply);
+                    //res.sendStatus(200);
+                    //res.send("ok")
+                    }
+          });
   
 }
