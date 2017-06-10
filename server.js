@@ -215,6 +215,42 @@ app.post("/img", function(req,res){
    
 })
 
+app.post("/getmytags", function(req,res){
+  
+      var query = '';
+  
+      req.setEncoding('utf8');
+      req.on("data", function(piece){
+        
+          query += piece
+      })
+      req.on("end", function(){
+  
+          query = JSON.parse(query);
+          console.log("getMyTags by", query)
+  
+          var url = "mongodb://" + "registeredUser" + ":" + process.env.registereduserpass + "@ds151661.mlab.com:51661/spacetags1"
+          mongo.connect(url, function(err,db){
+                    if (err) throw(err)
+                    else {
+
+                        db.collection("_001").find({"author": query.username}).toArray(function(er, rslt){
+                                if (er) throw er
+                                else {
+                                  console.log("---", query.username, "wants his tags", rslt.length)
+                                  res.send(rslt);
+                                  res.end();
+                                  db.close()
+                                }
+                          
+                        })
+
+                    }
+
+          })
+      }) 
+})
+
 app.post("/register", function(req, res){
   
               var newUser = '';
@@ -327,7 +363,7 @@ app.post("/login", function(req, res){
               console.log("all", all, typeof all)
           
               var url2 = "mongodb://public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
-              console.log(process.env.otherspass)
+              //console.log(process.env.otherspass)
               mongo.connect(url2, function(err, db){
                     if (err) {throw(err); res.sendStatus(404)}
                     else{
@@ -340,7 +376,7 @@ app.post("/login", function(req, res){
                                     if (er) {throw (er); res.sendStatus(404), res.end();}
                                     else {
                                         console.log("er", er); 
-                                        console.log("result",typeof result, result, result.length);
+                                        //console.log("result",typeof result, result, result.length);
                                       
                                         if      (result.length > 0) {res.sendStatus(200); console.log("sukces")}
                                       
@@ -384,9 +420,10 @@ app.get("/getTags", function (req, res) {
                 
           
                 if (req.query.username !== "public") req.query.username = "registereduser"
+                
                 console.log("user", req.query)
-          
-                var url = "mongodb://" + req.query.username + ":" + process.env[req.query.username + "pass"] + "@ds151661.mlab.com:51661/spacetags1"
+                                        //req.query.username
+                var url = "mongodb://" + "public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
                 mongo.connect(url, function(err, db) {
                       if (err) throw err;
                       else { console.log("conected to db")

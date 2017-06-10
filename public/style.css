@@ -4,16 +4,15 @@
 /* You might want to try something fancier: */
 /* less: http://lesscss.org/ */
 
+/*
 * {
   box-sizing- border-box;
-}
+}*/
 
 body {
   font-family: helvetica, arial, sans-serif;
   margin: 25px;
-  
-  
-  
+    
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
@@ -72,19 +71,20 @@ a-scene{
 .button{
   height: 50px;
   cursor: pointer;
-  border- 3px solid black;
+  /*border- 3px solid black;*/
   border-radius: 4px;
   font-size: 22px;
   margin: 4px; /*this has to stay minimum 4px if buttons have box-shadow*/
   padding: 5px 10px;
   
   background-color: white ;
-  box-shadow- 0px 0px 3px 3px white;
+  /*box-shadow- 0px 0px 3px 3px white;*/
   
   z-index: 1;
   
   display:flex;
-  align-items:center;
+  justify-content: center;
+  align-items: center;
 }
 .buttonSmall{
   height- 100%;
@@ -101,7 +101,11 @@ a-scene{
   z-index- 1;
   
   display:flex;
-  align-items-center;
+  align-items- center;
+}
+.sized{
+  width: 15%;
+  
 }
 p {
   
@@ -186,6 +190,11 @@ p {
   
   z-index: 1;
 }
+.disabled{
+  color: gray;
+  /*background-color: red;*/
+  text-decoration: line-through;
+}
 #addtagmenu{
   display: none;
       flex-direction: column; 
@@ -205,6 +214,8 @@ p {
 }
 #closeTagMenu{
   cursor:pointer;
+  background-color: white;
+  border-radius: 4px;
 }
 /*#addtagmenu */
  #addtagmenu .tagMenuItem{
@@ -273,8 +284,9 @@ p {
   
 }
 #addtagmenu label{
+  font-size: 12px;
   padding: 5px 10px;
-  background-color: rgba(255,255,255,0.7)
+  background-color: rgba(255,255,255,0.7);
 }
 #reposition{
   z-index: 1;
@@ -367,7 +379,7 @@ input[type="number"]:focus {
     -webkit-appearance: none !important;
 }*/
 .mapid{
-  border: 2px solid orange;
+  border- 2px solid orange;
   height: 100%; 
   width: 100%;
 }

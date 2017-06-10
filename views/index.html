@@ -22,11 +22,11 @@
     
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
   
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
-  <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
-    
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js" ></script>  
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+      <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js" ></script>  
     
       
       <!--script type="text/javascript" src="cloudinary/jquery.ui.widget.js"></script>
@@ -41,6 +41,7 @@
     
     
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style2.css">  
   <link rel="stylesheet" href="/upperMenu.css">  
 </head>
   <body>
@@ -105,13 +106,26 @@
           </div>
           <video id="camera-stream" style="border- 1px dashed cyan" autoplay></video>
       
+          <div id="tagsForEditing">
+          </div>
+      
           <div id="controls" style="">
-            <div id="reposition" class="button" style="display:flex; align-items:center"><i class="fa fa-compass" aria-hidden="false"></i></div>
-            <div id="openKbd" class="button" style="display:flex; align-items:center"><i class="fa fa-gamepad" aria-hidden="false"></i></div>
-            <div id="addTag" class="button"><!--i class="fa fa-flag" aria-hidden="true"></i--><i class="fa fa-pencil" aria-hidden="false"></i></div>    
+            <div id="mySettings"   class="button sized"                                       ><i class="fa fa-bars" aria-hidden="false"></i></div>
+            <div id="reposition" class="button sized" style="display:flex; align-items:center"><i class="fa fa-compass" aria-hidden="false"></i></div>
+            <div id="openKbd" class="button sized" style="display:flex; align-items:center"><i class="fa fa-gamepad" aria-hidden="false"></i></div>
+            <div id="addTag" class="button sized"><!--i class="fa fa-flag" aria-hidden="true"></i--><i class="fa fa-pencil" aria-hidden="false"></i></div>    
             
           </div>
+      
+          
     </div>
+    
+    <div id="settingsDiv">
+      <div id="settingsClose" class="button" onclick="settingsClose()">close</div>
+      <div id="getMyTags"     class="button" onclick="getMyTags()">edit my tags</div>
+    </div>
+    
+    
     
     <div id="repositionMenu">
           <div id="mapDiv" style="width: 100%; height: 200px; border- 1px dashed green">
@@ -168,12 +182,15 @@
     
     
     <div id="addtagmenu">
-        <div id="mapDiv2" style="width: 100%; height: 200px; border: 1px dashed green">
+        <div id="mapDiv2" style="width: 100%; height: 200px; border- 1px dashed green">
             <div id="map2" class="mapid" style="" ></div>
         </div>
         <div style="width:100%; display:flex; justify-content: space-between; align-items: center">
           
             <div  style="width: 20%; display: flex; justify-content: flex-start; align-items: center">
+                <div id="postText" onclick="toText()" class="button" style="display:none">
+                    <i class="fa fa-font" aria-hidden="false"></i>
+                </div>
                 <div id="postPic" onclick="imgUpload()" class="button">
                     <i class="fa fa-picture-o" aria-hidden="false"></i>  
                 </div>
@@ -184,38 +201,57 @@
 
             </div>
             <div style="width: 20%; display: flex; justify-content: flex-end">
-                <div id="closeTagMenu" style="padding: 5px 10px">close</div>  
+                <div id="closeTagMenu" style="padding: 5px 10px">cancel</div>  
             </div>
             
         </div>
       
         <div id="whatDiv" style="display: flex; flex-direction: column; align-items:center">
               <label id="imgCaptionLabel">img caption (optional)</label>
+              <label id="textLabel">text of tag</label>
               <input id="text"   type="text" class="tagMenuItem" placeholder="message" value="">
+              <label>author signed (cant be changed)</label>
               <input id="author" type="text" class="tagMenuItem" placeholder="author">
 
+              <label>tag color</label>
               <select id="selectColor" class="tagMenuItem" style="">
                       <option disabled>choose Tag's color</option>
-                      <option value="white">white</option>
-                      <option value="blue">blue</option>
-                      <option value="red">red</option>
-                      <option value="black">black</option>
-              </select> 
-        </div>  
-        <div id="whereDiv" style="display: none; flex-direction: column; align-items:center">
-          
+                      <option value="white"   >white</option>
+                      <option value="black"   >black</option>
+                      <option value="gray"    >gray</option>
+                      <option value="blue"    >blue</option>
+                      <option value="green"   >green</option>
+                      <option value="red"     >red</option>
+                      <option value="yellow"  >yellow</option>
+                      <option value="magenta" >magenta</option>
+                      <option value="cyan"    >cyan</option>
+                      <option value="orange"  >orange</option>
+                      <option value="purple"  >purple</option>
+                      <option value="pink"    >pink</option>
+                      <option value="brown"   >brown</option>
+              </select>
+              <label>size in meters</label>
               <input id="tagSize"   type="number" class="tagMenuItem" placeholder="size">
-
+        </div>  
+      
+        <div id="whereDiv" style="display: none; flex-direction: column; align-items:center">
+              <label>tag's gps latitude</label>
               <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
+              <label>tag's gps longitude</label>
               <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
+              <label>how high in meters (ground level is filled in)</label>
               <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
         </div>
         <!--div-->
-        <div id="imgUpload" style="border: 2px solid blue; background-color: white; 
+        <div id="imgUpload" style="border: 2px solid blue; background-color- white; 
                                            display: none; flex-direction: column; align-items: center;
                                            width: 100%; height- 80px">  
-                      <input  type="file" id="imgToUp" style="border: 2px solid green; font-size: 15px; height: 20px; width: 50%"/>
-                      <img id="img" style="border: 1px dashed green; display: none">
+                      <input  type="file" id="imgToUp" style="border- 2px solid green; 
+                                                              background-color: white; 
+                                                              font-size: 15px; height: auto; width: auto;
+                                                              display: flex; justify-content: center;
+                                                              padding: 5px 0px"/>
+                      <img id="img" style="border- 1px dashed green; display: none">
         </div>
             
         <!--/div-->
@@ -224,6 +260,7 @@
               <input id="imgAuthor" type="text" class="tagMenuItem" placeholder="author">
         </div>
         <div id="submit" class="button" style="padding: 10px 10px">place into space</div>
+        <div id="editSubmit" class="button" style="display: none; padding: 10px 10px">edit tag</div>
     </div>
     
     

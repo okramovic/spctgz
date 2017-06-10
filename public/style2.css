@@ -1,0 +1,50 @@
+#settingsDiv{
+  position: absolute;
+  bottom: 0px;
+  
+  width: 50%;
+  
+  z-index: 1;
+  
+  background-color: rgba(0,0,0,0.4);
+  border: 1px solid black;
+  
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#tagsForEditing{
+  z-index: 1;
+  width: 100%;
+  
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  
+  background-color: rgba(0,0,0,0.4);
+}
+.tagToEdit{
+  width- 80%;
+  margin: auto;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  
+  padding- 5px 0px;
+  
+  font-size: 20px;
+  background-color- white;
+  border-radius: 4px;
+  
+  display: flex;
+  justify-content: center;
+}
+.tagToEdit i{
+  margin-left: 10px;
+  padding: 2px 4px;
+  
+  background-color: white;
+  border-radius: 4px;
+}

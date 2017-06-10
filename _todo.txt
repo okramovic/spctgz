@@ -1,3 +1,15 @@
+- when registering - check if nick is already taken by someone else and allow
+          only unique nicks
+
+- warn users what must be turned on so spctgz works ok
+          they must have "https://" before actual url
+          gps must be turned on
+
+- after logout, regandlogin div is visible at top again so i can login or etc.
+
+- after i clicked on image post, if i only want to post text, i choose text and 
+      img div is hidden like at the beginning
+
 - create system to post also images
 
 - i can edit my tags

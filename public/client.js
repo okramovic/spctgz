@@ -20,6 +20,8 @@ var vid;
 var cntr = 0;
 var tags;
 
+var tagsToEdit;
+
 var postType = "text";
 var file;
 
@@ -64,14 +66,15 @@ $(function() {
   
   $("#reposition").on('click', function(){
           
-        $("#addTag").hide()
-        $("#openKbd").hide()
-    
+        $("#mySettings").hide();
+        $("#reposition").hide();
+        $("#openKbd").hide();
+        $("#addTag").hide();
         
         console.log("click repo```````")//, user.lat, user.lon);
         //console.log("user before @", user)
         $("#repositionMenu").css("display", "flex")
-        $("#reposition").hide()
+        
     
     
               $("#mapAlt").val(user.alt)
@@ -204,6 +207,8 @@ $(function() {
                       setScene(tags, function(){
                         
                                       $("#repositionMenu").hide();
+                        
+                                      $("#mySettings").show();
                                       $("#reposition").show()
                                       $("#addTag").show()
                                       $("#openKbd").show()
@@ -227,6 +232,8 @@ $(function() {
                           setScene(tags, function(){
                         
                                       $("#repositionMenu").hide();
+                            
+                                      $("#mySettings").show();
                                       $("#reposition").show()
                                       $("#addTag").show()
                                       $("#openKbd").show()
@@ -247,41 +254,60 @@ $(function() {
   })
   $("#closeRepositionMenu").click(function(){
     
-              $("#repositionMenu").hide()
-              $("#reposition").show()
-              $("#addTag").show()
-              $("#openKbd").show()
+              $("#repositionMenu").hide();
+    
+              $("#mySettings").show();
+              $("#reposition").show();
+              $("#addTag").show();
+              $("#openKbd").show();
               //repoCoords.lat = user.lat;
               //repoCoords.lon = user.lon;
   })
-  $("#addTag").on('click', function(){
+  $("#addTag").on('click', addTagClick)/*function(){
           
-          map("map2", user.lat, user.lon, tags, "add_tag")
+          map("map2", user.lat, user.lon, tags, "add_tag");
     
             //console.log("click ```````");
-            $("#openKbd").hide()
+            $("#settings").hide();
+            $("#openKbd").hide();
             $("#addTag").hide();
             $("#reposition").hide();
             $("#imgCaptionLabel").hide();
     
             $("#addtagmenu").css("display", "flex");
     
-                  $("#author").val(username)
+                  $("#text").val("");
+                  $("#author").val(username);
+                  $("#author").prop("disabled", true);
+                  $("#tagSize").val(1);
     
-                  $("#tagLat").val(user.lat)
-                  $("#tagLon").val(user.lon)
-                  $("#tagAlt").val(user.alt)
+    
+                  $("#tagLat").val(user.lat);
+                  $("#tagLon").val(user.lon);
+                  $("#tagAlt").val(user.alt);
     
                   //x = parseFloat(parseFloat($("#tagLat").val()).toFixed(7) )
                   //console.log("test lat", typeof x, x)
-
-  })
+          */
+    //}
+  //)
   $("#closeTagMenu").click(function(){
           
             $("#addtagmenu").hide();
+            $("#imgUpload").hide();
+    
+            $("#mySettings").show();
             $("#addTag").show();
-            $("#openKbd").show()
+            $("#openKbd").show();
             $("#reposition").show();
+    
+                  $("#postText").hide();
+                  $("#postPic").show();
+                  $("#textLabel").show();
+    
+                  postType = "text";
+    
+                  
   })
   $("#submit").click(function(){
     
@@ -289,10 +315,11 @@ $(function() {
           if (postType === "text"){
           postTag(function(){
               $("#addtagmenu").hide();
-            
-              $("#reposition").show();
-              $("#addTag").show()  
+              
+              $("#mySettings").show();
               $("#openKbd").show()
+              $("#addTag").show()  
+              $("#reposition").show();
           })
             
             
@@ -301,9 +328,11 @@ $(function() {
               
                 doUpload(file, function(re){
                                 
-                                  var query = { "author":  username,
+                                  var query = { 
                                                         "_type":   "img",
-                                                        "caption": $("#text").val(),
+                                                        "text":    $("#text").val(),
+                                                        "author":  username,
+
                                                         "col":     $("#selectColor option:selected").val(),
                                                         "size":    parseFloat( $("#tagSize").val()),
                                                         "width":   re.width,
@@ -326,6 +355,11 @@ $(function() {
                                                                 getTags()
                                                         
                                                                 $("#addtagmenu").hide();
+                                                                $("#imgUpload").hide();
+                                                                      $("#textLabel").show();
+                                                        
+                                                                $("#postText").hide();
+                                                                $("#postPic").show();
                                                         
                                                                 $("#reposition").show();
                                                                 $("#openKbd").show();
@@ -347,7 +381,6 @@ $(function() {
           postType = "text";
   })
 
-  //$("#p").html(" aaaaa ");
   video();
   getGPS("repo", function(){
     
@@ -360,7 +393,6 @@ $(function() {
     
                 
   });
-  
   
 })//end of Document ready function
 
@@ -842,7 +874,7 @@ function formatD(msg){
   
     
     
-    var fontsize = 15;
+    var fontsize = 13;
       
       
       $("#repositionMenu label").css("font-size", fontsize);   //  $("[href='default.htm']")
@@ -938,6 +970,10 @@ function login(){
                               username = $("#loginNick").val().toString()
                               console.log("user logged in:", username);
                           
+                              $("#mySettings").attr("class", "button sized");
+                              $("#mySettings").click(mySettingsClick)
+                              $("#addTag").attr("class", "button sized");
+                              $("#addTag").click(addTagClick);
                           
                         } else if (status != "success" || data === "fail") {
                           
@@ -972,6 +1008,13 @@ function usePublic(){
                               "flex-direction": "row"});
       
       
+      $("#mySettings").attr("class", "button sized disabled");
+      //$("#mySettings").off("click");
+      $("#addTag").attr("class", "button sized disabled");
+      $("#addTag").off("click");
+
+      console.log("disabled?");
+      
   
 }
 //function filterTo5km(){}
@@ -980,8 +1023,13 @@ function imgUpload(){
           postType = "img";
           //$("#whatDiv").hide(); $("#whereDiv").hide();
           $("#imgUpload").css("display", "flex");
-          $("#imgToUp").show()
-          $("#imgCaptionLabel").show()
+          $("#imgToUp").show();
+          $("#imgCaptionLabel").show();
+  
+          $("#postText").css("display", "flex");
+          $("#postPic").hide();
+  
+                $("#textLabel").hide();
           
           $('#imgToUp').change(function(){   
           
@@ -1047,4 +1095,79 @@ var doUpload = function(file, cb){
                                               }
                                           };
                     xhr.send(formData);
+}
+function toText(){
+  
+              $("#imgUpload").hide();
+  
+              $("#textLabel").show();
+              $("#imgCaptionLabel").hide();
+                                                        
+              $("#postText").hide();
+              $("#postPic").show();
+  
+              postType="text";
+}
+function mySettingsClick(){
+  
+          $("#mySettings").hide();
+          $("#reposition").hide();
+          $("#addTag").hide();
+          $("#openKbd").hide();
+  
+          $("#settingsDiv").show();
+}
+function addTagClick(){
+  
+                  map("map2", user.lat, user.lon, tags, "add_tag");
+
+                  console.log("click ``add tag``");
+                  $("#mySettings").hide();
+                  $("#openKbd").hide();
+                  $("#addTag").hide();
+                  $("#reposition").hide();
+                  $("#imgCaptionLabel").hide();
+
+                  $("#addtagmenu").css("display", "flex");
+
+                          $("#text").val("");
+                          $("#author").val(username);
+                          $("#author").prop("disabled", true);
+                          $("#tagSize").val(1);
+
+
+                          $("#tagLat").val(user.lat);
+                          $("#tagLon").val(user.lon);
+                          $("#tagAlt").val(user.alt);
+}
+function getMyTags(){
+  
+          var query = user;
+          query.username = username;
+  
+          $.post("getmytags", JSON.stringify(query), function(data, status){
+            
+                  tagsToEdit = data;
+              
+                  $("#tagsForEditing").css("display","flex");
+            
+                  tagsToEdit.forEach(function(item, index){
+                    
+                          if (item._type === "text"){
+                    
+                                $("#tagsForEditing").append('<div id="tagEdit' + index + "+ title=" + item._id + '" class="tagToEdit">' + 
+                                                            '<div class="tagText">' + item.text + '</div>' + 
+                                                            '<i class="fa fa-font" aria-hidden="false"></i>' + '</div')
+                            
+                          } else if (item._type === "img"){
+                            
+                                $("#tagsForEditing").append('<div id="tagEdit' + index + "+ title=" + item._id + '" class="tagToEdit">' + 
+                                                            '<div class="tagText">' + item.text + '</div>' + 
+                                                            '<i class="fa fa-picture-o" aria-hidden="false"></i>' + '</div')
+                          }
+                    
+                  })
+            
+          })
+  
 }

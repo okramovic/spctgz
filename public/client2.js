@@ -118,3 +118,27 @@ function repoCamera(lat,lon,alt, cb){
   alert(msg);
   return
 }*/
+
+/*function settingsOpen(){
+  
+    $("#settings").hide();
+    $("#reposition").hide();
+    $("#addTag").hide();
+    $("#openKbd").hide();
+  
+    $("#settingsDiv").show();
+  
+}*/
+function settingsClose(){
+  
+        $("#settingsDiv").hide();
+        $("#tagsForEditing").hide();
+            $("#tagsForEditing").empty()
+  
+        $("#settings").show();
+        $("#reposition").show();
+        $("#addTag").show();
+        $("#openKbd").show();          
+  
+        
+}
