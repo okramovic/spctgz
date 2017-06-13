@@ -5,6 +5,7 @@ var request = require("request");
 var express = require('express');
 var app = express();
 var mongo = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 
 var nodemailer = require('nodemailer');
 var sendmail = require('sendmail')();
@@ -91,6 +92,9 @@ app.post("/postTag", function (request, response) {
         
               wholedata = JSON.parse(wholedata)
         
+                    wholedata.dateVerbose = new Date();
+                    wholedata.dateMilisec = Date.now();
+        
               console.log("received wholedata", typeof wholedata, wholedata)
         
               var url = "mongodb://public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
@@ -154,17 +158,22 @@ app.post("/img", function(req,res){
       })
       req.on("end", function(){
             //console.log(req)
-            //var toUpl=req.query.author
+            
             imgdata = JSON.parse(imgdata)
+        
+                imgdata.dateVerbose = new Date();
+                imgdata.dateMilisec = Date.now();
+        
             console.log("imgdata", typeof imgdata, imgdata)
-            //console.log("toUpl", typeof toUpl, toUpl);
-            //console.log("end of file receiving");console.log("img>",imgdata)
+            
             
             var url = "mongodb://public" + ":" + process.env["publicpass"] + "@ds151661.mlab.com:51661/spacetags1"
             mongo.connect(url, function(er, db){
                     if (er) throw(er)
                     else{
                             console.log("img upload db connect")
+                      
+                            
                       
                             db.collection("_001").insertOne(imgdata,function(er, rslt){
                         
@@ -214,7 +223,72 @@ app.post("/img", function(req,res){
       })
    
 })
-
+app.post("/edit", function(req, res){
+  
+        var q = ''
+        req.setEncoding('utf8');
+        req.on("data", function(chunk){
+            q += chunk;
+        })
+        req.on("end", function(){
+          
+              q = JSON.parse(q);
+              console.log("change query", q)
+          
+              var url = "mongodb://" + "registeredUser" + ":" + process.env.registereduserpass + "@ds151661.mlab.com:51661/spacetags1"
+              mongo.connect(url, function(err,db){
+                        if (err) throw(err)
+                        else {
+                            var id = {"_id": new ObjectId(q._id)}
+                          
+                                var date = new Date()
+                            
+                            //try {
+                            db.collection("_001").find(id).toArray( function(er, result){
+                              
+                                    //archiving previous version of tag
+                                    result = result[0]
+                                      //console.log("result is", typeof result)
+                                      console.log("rslt", result.toString())
+                                    if  (result.archive === undefined) {q.archive = []; q.archive.push(result)}
+                                    else {
+                                        var archive = result.archive
+                                        delete result.archive
+                                      
+                                        archive.push(result)
+                                        q.archive = archive
+                                    }
+                                    informMarko(q)
+                                    //console.log("new archive", q.archive)
+                              
+                                    q._id = new ObjectId(q._id)
+                            
+                                    db.collection("_001").updateOne(id, q, function(er, result){
+                              
+                                        if (er) throw er
+                                        else {
+                                          
+                                          console.log("update result");
+                                          //console.log(result);
+                                          console.log("important", result.modifiedCount, result.matchedCount, result.result.ok);
+                                          
+                                          if (result.result.ok === 1) res.send("ok");
+                                          res.end();
+                                          db.close();
+                                        }
+                              
+                                    })
+                            /*} catch(e){
+                              print(e)
+                              console.log("^^^^ e?",e)
+                            }*/
+                            
+                        //}
+                            })
+                        }
+              })
+      })    
+})
 app.post("/getmytags", function(req,res){
   
       var query = '';
@@ -240,9 +314,9 @@ app.post("/getmytags", function(req,res){
                                   console.log("---", query.username, "wants his tags", rslt.length)
                                   res.send(rslt);
                                   res.end();
-                                  db.close()
+                                  
                                 }
-                          
+                                db.close()
                         })
 
                     }
@@ -266,6 +340,10 @@ app.post("/register", function(req, res){
               req.on("end", function(){
                 
                       newUser = JSON.parse(newUser)
+                
+                            newUser.createdVerbose = new Date();
+                            newUser.createdMilisec = Date.now();
+                  
                       console.log("newuser",typeof newUser, newUser);
                 
                   var url = "mongodb://public" + ":" + process.env["publicpass"] + "@ds151661.mlab.com:51661/spacetags1"
@@ -325,7 +403,7 @@ app.post("/register", function(req, res){
                                                   
                                               })
                                               } catch (e) {
-                                                 //print (e);
+                                                 print (e);
                                               };
                                               
                                         }
@@ -360,7 +438,7 @@ app.post("/login", function(req, res){
           
               all = JSON.parse(all)
           
-              console.log("all", all, typeof all)
+              //console.log("all", all, typeof all)
           
               var url2 = "mongodb://public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
               //console.log(process.env.otherspass)
@@ -421,12 +499,12 @@ app.get("/getTags", function (req, res) {
           
                 if (req.query.username !== "public") req.query.username = "registereduser"
                 
-                console.log("user", req.query)
+                //console.log("user", req.query)
                                         //req.query.username
                 var url = "mongodb://" + "public" + ":" + process.env.publicpass + "@ds151661.mlab.com:51661/spacetags1"
                 mongo.connect(url, function(err, db) {
                       if (err) throw err;
-                      else { console.log("conected to db")
+                      else { //console.log("conected to db")
 
 
                             //example for find: var query = { address: "Park Lane 38" };

@@ -133,12 +133,14 @@ function settingsClose(){
   
         $("#settingsDiv").hide();
         $("#tagsForEditing").hide();
-            $("#tagsForEditing").empty()
+            //$("#tagsForEditing").empty()
   
-        $("#settings").show();
+        $("#mySettings").show();
         $("#reposition").show();
         $("#addTag").show();
         $("#openKbd").show();          
   
+        $("#imgUpload").hide()
+        $("#img").attr("src","")
         
 }

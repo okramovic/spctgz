@@ -41,7 +41,7 @@
   display: flex;
   justify-content: center;
 }
-.tagToEdit i{
+.tagToEdit i, #tagsForEditing i{
   margin-left: 10px;
   padding: 2px 4px;
   

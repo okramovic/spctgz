@@ -21,6 +21,7 @@ var cntr = 0;
 var tags;
 
 var tagsToEdit;
+var changeID;
 
 var postType = "text";
 var file;
@@ -41,9 +42,6 @@ user = {}; //user.lat = cam.lat; user.lon = cam.lon; user.alt = cam.alt
 
 
 $(function() {
-  
-                      /*var query = { author: "kokosak"};
-                      $.post("img" , JSON.stringify(query) , function(data, status){})*/
   
   if (logr) {$("#xx").html(window.innerHeight + " " +window.innerWidth); $("#xx").fadeOut(3000);}
   
@@ -291,10 +289,94 @@ $(function() {
           */
     //}
   //)
+  $("#editSubmit").click(function(){
+    
+        if (confirm("Change: are you sure you want to?")){
+            if ($("#imgUpload").is(":visible")){    console.log("--- img is visible", file)
+              
+                                                
+                                                
+                          // if changing the image
+                          if (file !== undefined) doUpload(file, function(rslt){
+                      
+                                            var query = { 
+                                                        "_id":     changeID,
+                                                        "_type":   "img",
+                                                        "text":    $("#text").val(),
+                                                        "author":  username,
+
+                                                        "col":     $("#selectColor option:selected").val(),
+                                                        "size":    parseFloat( $("#tagSize").val()),
+                                                        "width":   rslt.width,
+                                                        "height":  rslt.height,
+
+                                                        "lat":     parseFloat(parseFloat($("#tagLat").val()).toFixed(7) ),
+                                                        "lon":     parseFloat(parseFloat($("#tagLon").val()).toFixed(7) ), 
+                                                        "alt":     parseFloat(parseFloat($("#tagAlt").val()).toFixed(7) ),
+
+                                                        "url":     rslt.secure_url,
+                                                 //"userCoords": user
+                                            }
+                                            console.log("--- tag change: new image. \n update to", query)
+                            
+                                            submitEdit(query)
+                                            })
+                        // if changing other things but image stays same
+                        else {              // find original data of image (url, w, h) according to changeID
+                                            var changeIndex
+                                            for (var i = 0; i< tagsToEdit.length; i++){
+                                              
+                                                      if (tagsToEdit[i]._id === changeID) {changeIndex = i; break; }
+                                            }
+                          
+                          
+                          
+                                            var query = { 
+                                                        "_id":     changeID,
+                                                        "_type":   "img",
+                                                        "text":    $("#text").val(),
+                                                        "author":  username,
+
+                                                        "col":     $("#selectColor option:selected").val(),
+                                                        "size":    parseFloat(parseFloat($("#tagSize").val()).toFixed(2)),
+                                                        "width":   tagsToEdit[changeIndex].width,
+                                                        "height":  tagsToEdit[changeIndex].height,
+
+                                                        "lat":     parseFloat(parseFloat($("#tagLat").val()).toFixed(7) ),
+                                                        "lon":     parseFloat(parseFloat($("#tagLon").val()).toFixed(7) ), 
+                                                        "alt":     parseFloat(parseFloat($("#tagAlt").val()).toFixed(7) ),
+
+                                                        "url":     tagsToEdit[changeIndex].url,
+                                                        //"userCoords": user
+                                            }
+                                            console.log("--- tag change: image stays. \n update to", query)
+                                            //console.log("tag to change", query)
+                                            submitEdit(query)
+                        }
+                        
+            } else {
+              
+                  var query = {
+                              "_id":    changeID,
+                              "_type":  "text",
+                              "text":   $("#text").val(),
+                              "author": username,//$("#author").val(),
+                              "col":    $("#selectColor option:selected").val(),
+                              "size":   parseFloat(parseFloat($("#tagSize").val()).toFixed(2)),
+                              "lat":    parseFloat(parseFloat($("#tagLat").val()).toFixed(7) ),
+                              "lon":    parseFloat(parseFloat($("#tagLon").val()).toFixed(7) ), 
+                              "alt":    parseFloat(parseFloat($("#tagAlt").val()).toFixed(7) )
+                              }
+                  console.log("--- only text \n update to", query)
+                  submitEdit(query)
+            }
+        }
+  })
   $("#closeTagMenu").click(function(){
           
             $("#addtagmenu").hide();
             $("#imgUpload").hide();
+            //$("#tagsForEditing").empty();
     
             $("#mySettings").show();
             $("#addTag").show();
@@ -306,7 +388,8 @@ $(function() {
                   $("#textLabel").show();
     
                   postType = "text";
-    
+                  //file = undefined;
+                  //$("#img").attr("src", undefined)
                   
   })
   $("#submit").click(function(){
@@ -361,11 +444,12 @@ $(function() {
                                                                 $("#postText").hide();
                                                                 $("#postPic").show();
                                                         
+                                                                $("#mySettings").show();
                                                                 $("#reposition").show();
                                                                 $("#openKbd").show();
                                                                 $("#addTag").show();  
                                                                 
-                                                                
+                                                                file = undefined;
                                                       }
                                                       //tags = data;
                                                       console.log(data)//"after image posted - updated tags",tags)
@@ -388,10 +472,7 @@ $(function() {
                 
                         //tags.unshift(user)
                         //setScene(tags)
-                  
-                });
-    
-                
+                });    
   });
   
 })//end of Document ready function
@@ -984,7 +1065,7 @@ function login(){
                              
                         
                         }
-                    console.log("d s ",data, status,xhr)
+                    //console.log("d s ",data, status,xhr)
 
               })
 }
@@ -1017,26 +1098,13 @@ function usePublic(){
       
   
 }
-//function filterTo5km(){}
-function imgUpload(){
-  
-          postType = "img";
-          //$("#whatDiv").hide(); $("#whereDiv").hide();
-          $("#imgUpload").css("display", "flex");
-          $("#imgToUp").show();
-          $("#imgCaptionLabel").show();
-  
-          $("#postText").css("display", "flex");
-          $("#postPic").hide();
-  
-                $("#textLabel").hide();
-          
-          $('#imgToUp').change(function(){   
+function imgChange(){
+          //function(){   
           
           
             
             
-                    console.log("upload", this)
+                    //console.log("upload", this)
                     console.log("files",this.files[0])
                     //console.log("files", this.files)
             
@@ -1069,8 +1137,23 @@ function imgUpload(){
                                    preview.src = "";
                                }*/
                               }
-                      }
-        })
+                    }
+        //})
+}
+function imgUpload(){
+          //console.log("is imgDiv visible?", $("#imgUpload").is(":visible"))
+          postType = "img";
+          //$("#whatDiv").hide(); $("#whereDiv").hide();
+          $("#imgUpload").css("display", "flex");
+          $("#imgToUp").show();
+          $("#imgCaptionLabel").show();
+  
+          $("#postText").css("display", "flex");
+          $("#postPic").hide();
+  
+                $("#textLabel").hide();
+          
+          $('#imgToUp').change(imgChange)
 }
 var doUpload = function(file, cb){
                                           //var files = document.getElementById("myid").files; 
@@ -1089,8 +1172,10 @@ var doUpload = function(file, cb){
                                                     
                                                       console.log(JSON.parse(xhr.responseText));
                                                       cb(resp)
+                                                      file = undefined
                                                   } else {
                                                       console.log("error with uploading");
+                                                      file = undefined
                                                   }
                                               }
                                           };
@@ -1099,12 +1184,14 @@ var doUpload = function(file, cb){
 function toText(){
   
               $("#imgUpload").hide();
+              $("#img").attr("src","")
   
               $("#textLabel").show();
               $("#imgCaptionLabel").hide();
                                                         
               $("#postText").hide();
               $("#postPic").show();
+  
   
               postType="text";
 }
@@ -1118,7 +1205,7 @@ function mySettingsClick(){
           $("#settingsDiv").show();
 }
 function addTagClick(){
-  
+                  console.log("is imgDiv visible?", $("#imgUpload").is(":visible"))
                   map("map2", user.lat, user.lon, tags, "add_tag");
 
                   console.log("click ``add tag``");
@@ -1150,24 +1237,149 @@ function getMyTags(){
                   tagsToEdit = data;
               
                   $("#tagsForEditing").css("display","flex");
+                  $("#tagsForEditing").empty();
+            
             
                   tagsToEdit.forEach(function(item, index){
                     
                           if (item._type === "text"){
                     
-                                $("#tagsForEditing").append('<div id="tagEdit' + index + "+ title=" + item._id + '" class="tagToEdit">' + 
-                                                            '<div class="tagText">' + item.text + '</div>' + 
-                                                            '<i class="fa fa-font" aria-hidden="false"></i>' + '</div')
+                                $("#tagsForEditing").append('<div style="display: flex">' + 
+                                                                '<div id="tagEdit' + index + '"+ title="' + item._id + '" class="tagToEdit">' + 
+                                                                      '<div class="tagText">' + item.text + '</div>' + 
+                                                                      '<i class="fa fa-font" aria-hidden="false"></i>' + 
+                                                                '</div>' + 
+                                                                '<div id="delete' + index + '"><i class="fa fa-trash" aria-hidden="false"></i></div>' +
+                                                            '</div>')
+                                $("#tagEdit" + index).click(function(){
+                                  
+                                            console.log("this", this)
+                                            editTag(index);
+                                            //this.off("click")
+                                            $("#tagEdit" + index).off("click")
+                                            console.log("test edit", index)
+                                })
+                                $("#delete" + index).click(function(){
+                                            console.log("this", this)
+                                            //console.log("delete", index)
+                                            //this.off("click")
+                                            $("#tagEdit" + index).off("click")
+                                            console.log("delete", index)
+                                })
+                            
                             
                           } else if (item._type === "img"){
                             
-                                $("#tagsForEditing").append('<div id="tagEdit' + index + "+ title=" + item._id + '" class="tagToEdit">' + 
-                                                            '<div class="tagText">' + item.text + '</div>' + 
-                                                            '<i class="fa fa-picture-o" aria-hidden="false"></i>' + '</div')
+                                $("#tagsForEditing").append('<div style="display: flex">' + 
+                                                                '<div id="tagEdit' + index + '"+ title="' + item._id + '" class="tagToEdit">' + 
+                                                                    '<div class="tagText">' + item.text + '</div>' + 
+                                                                    '<i class="fa fa-picture-o" aria-hidden="false"></i>' + 
+                                                                '</div>' +
+                                                                '<div id="delete' + index + '"><i class="fa fa-trash" aria-hidden="false"></i></div>' +
+                                                            '</div>')
+                            
+                                $("#tagEdit" + index).click(function(){
+                                            editTag(index);
+                                            console.log("this", this)
+                                            this.off("click")
+                                })
+                                $("#delete" + index).click(function(){
+                                            console.log("delete", index)
+                                            console.log("this", this)
+                                            this.off("click")
+                                })
                           }
                     
                   })
             
           })
+  
+}
+function editTag(i){
+  
+          console.log("tag to edit", i)
+  
+          $("#tagsForEditing").hide();
+          
+          
+          map("map2", user.lat, user.lon, tags, "add_tag");
+
+                  console.log("click ``add tag``");
+                  $("#mySettings").hide();
+                  $("#openKbd").hide();
+                  $("#addTag").hide();
+                  $("#reposition").hide();
+                  $("#imgCaptionLabel").hide();
+                  
+                  $("#settingsDiv").hide();
+  
+                  $("#submit").hide();
+                  $("#editSubmit").show();
+  
+                  $("#addtagmenu").css("display", "flex");
+  
+                  //console.log("is imgDiv visible?", $("#imgUpload").is(":visible"))
+
+                          $("#text").val(tagsToEdit[i].text);
+                          $("#author").val(tagsToEdit[i].author);
+                          $("#author").prop("disabled", true);
+                          $("#tagSize").val(tagsToEdit[i].size);
+
+                          var l = $("#selectColor option") ;//console.log("l",l)
+
+                          for (var j=1; j<l.length; j++ ){
+
+                                                        if ( tagsToEdit[i].col === l[j].value) l[j].selected = true  
+
+                                                        else l[j].selected = false  
+                                                
+
+                          }
+                          $("#imgUpload").hide()
+  
+                          if (tagsToEdit[i].hasOwnProperty("url")) {
+                            
+                                    console.log("you wanna edit img tag");
+                            
+                                    $("#imgUpload").css("display", "flex")
+                                    $("#imgUpload input").css("display", "flex")
+                            
+                                    
+                                    //$("#imgToUp").show();  
+                                    $("#imgCaptionLabel").show();
+                                    $("#textLabel").hide();
+                            
+                                    $("#img").attr("src", tagsToEdit[i].url)
+                                    $("#img").show()
+                                    
+                          } 
+
+                          $("#tagLat").val(tagsToEdit[i].lat);
+                          $("#tagLon").val(tagsToEdit[i].lon);
+                          $("#tagAlt").val(tagsToEdit[i].alt);
+  
+                          changeID = tagsToEdit[i]._id
+}
+function submitEdit(obj,cb){
+  
+            $.post("edit", JSON.stringify(obj), function(data, status){
+              
+                      console.log("",data)
+              
+                      if (data === "ok") getTags(function(){
+                        
+                                                  console.log(" - - - tag should be updated now")
+                                                  $("#addtagmenu").hide()
+                        
+                                                  $("#mySettings").show();
+                                                  $("#reposition").show();
+                                                  $("#openKbd").show();
+                                                  $("#addTag").show();  
+                                                                
+                                                  file = undefined;
+                                                                
+                                         })
+              
+            })
   
 }

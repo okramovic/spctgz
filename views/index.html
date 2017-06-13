@@ -207,6 +207,13 @@
         </div>
       
         <div id="whatDiv" style="display: flex; flex-direction: column; align-items:center">
+              <div>
+                  <label>post tag as:</label>
+                  <select>
+                      <option value="public">public</option>  
+                  </select>  
+              </div>
+          
               <label id="imgCaptionLabel">img caption (optional)</label>
               <label id="textLabel">text of tag</label>
               <input id="text"   type="text" class="tagMenuItem" placeholder="message" value="">
@@ -245,8 +252,9 @@
         <!--div-->
         <div id="imgUpload" style="border: 2px solid blue; background-color- white; 
                                            display: none; flex-direction: column; align-items: center;
-                                           width: 100%; height- 80px">  
-                      <input  type="file" id="imgToUp" style="border- 2px solid green; 
+                                           width: 100%; height- 80px">
+                      <div id="closeImg" class="button">remove image</div>
+                      <input  type="file" id="imgToUp" onchange="imgChange()" style="border- 2px solid green; 
                                                               background-color: white; 
                                                               font-size: 15px; height: auto; width: auto;
                                                               display: flex; justify-content: center;
@@ -255,10 +263,10 @@
         </div>
             
         <!--/div-->
-        <div id="imgWhat"  style="display: none; flex-direction: column; align-items:center">
+        <!--div id="imgWhat"  style="display: none; flex-direction: column; align-items:center">
               <input id="imgCaption"   type="text" class="tagMenuItem" placeholder="message" value="">
               <input id="imgAuthor" type="text" class="tagMenuItem" placeholder="author">
-        </div>
+        </div-->
         <div id="submit" class="button" style="padding: 10px 10px">place into space</div>
         <div id="editSubmit" class="button" style="display: none; padding: 10px 10px">edit tag</div>
     </div>

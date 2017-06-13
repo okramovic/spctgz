@@ -392,3 +392,9 @@ input[type="number"]:focus {
   height- 100%; 
   width- 100%;
 }
+
+
+#imgUpload img{
+  max-height: 100px;
+  width: auto;
+}
