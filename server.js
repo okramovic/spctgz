@@ -107,7 +107,7 @@ app.post("/postTag", function (request, response) {
                         if (er) throw(er)
                         else{
                         
-                              informMarko(wholedata)
+                              informMarko(wholedata, "tag post")
                               //db.close()
                               
                           
@@ -181,7 +181,7 @@ app.post("/img", function(req,res){
                                         else{ res.send("ok")
                                               res.end();
                                               db.close()
-                                              informMarko(imgdata)
+                                              informMarko(imgdata, "img post")
                                               //db.close()
 
 
@@ -258,7 +258,7 @@ app.post("/edit", function(req, res){
                                         archive.push(result)
                                         q.archive = archive
                                     }
-                                    informMarko(q)
+                                    //informMarko(q)
                                     //console.log("new archive", q.archive)
                               
                                     q._id = new ObjectId(q._id)
@@ -288,6 +288,65 @@ app.post("/edit", function(req, res){
                         }
               })
       })    
+})
+app.post("/deleteTag", function(req, res){
+  
+        var q = ''
+        req.setEncoding('utf8');
+        req.on("data", function(chunk){
+            q += chunk;
+        })
+        req.on("end", function(){
+          
+              //q = JSON.parse(q);
+              var toDelete;
+              console.log("delete _id", q)
+          
+              var url = "mongodb://" + "registeredUser" + ":" + process.env.registereduserpass + "@ds151661.mlab.com:51661/spacetags1"
+              mongo.connect(url, function(err,db){
+                        if (err) throw(err)
+                        else {
+                          
+                          var id = {"_id": new ObjectId(q)}
+                          // insert it into users archive of deleted Tags
+                          db.collection("_001").findOne(id, function(er, result){
+                                  if (err) throw(err)
+                                  else {
+                                    
+                                      console.log("Find one - result", result)
+                                      toDelete = result
+                                    
+                                      
+                                      db.collection("archive_001").insertOne(toDelete, function(er3, rslt3){
+                                                if(er3) throw(er3)
+                                                else {
+                                                  console.log("Archive one - result", rslt3.insertedCount, "ok?", rslt3.result.ok)
+                                                  
+                                                  db.collection("_001").deleteOne(id, function(er2, rslt2){
+                                                    
+                                                                  if(er2) throw(er2)
+                                                                  else {
+                                                                    console.log("Delete one - result", rslt2.deletedCount, "ok?", rslt2.result.ok)
+
+                                                                    if (rslt2.deletedCount === 1) {
+
+                                                                              res.send("ok");
+                                                                              res.end();
+                                                                              db.close();
+                                                                              informMarko(toDelete, "DELETE")
+                                                                    }
+                                                                  }
+                                        
+                                                  })
+                                                }
+                                      })
+                                  }
+                            
+                          })
+                        }
+              })
+        })  
+  
 })
 app.post("/getmytags", function(req,res){
   
@@ -399,7 +458,7 @@ app.post("/register", function(req, res){
                                                                   res.send("ok")
                                                                 }
                                                   });
-                                                  informMarko(newUser)
+                                                  informMarko(newUser, "NEW USER")
                                                   
                                               })
                                               } catch (e) {
@@ -581,12 +640,12 @@ function filterByDistance(initialArray, user, dist, cb){
       }
   
 }
-function informMarko(data){
+function informMarko(data, type){
   
           sendmail({
                     from: 'admin@spacetagz.com',
                     to: "okram@protonmail.ch",
-                    subject: 'new activity on spctgz ✔', // Subject line
+                    subject: 'new ' + type + ' on spctgz ✔', // Subject line
                     text: 'text Hello word text', // plain text body
                     html: '<h4>new activity:</h4>' + 
                     '<p> ' + JSON.stringify(data) + '</p>'
@@ -600,8 +659,8 @@ function informMarko(data){
                     console.log(err && err.stack);
 
                     } else {
-
-                    console.dir(reply);
+                    console.log("mail sent OK");
+                    //console.dir("mail sent OK");//,reply);
                     //res.sendStatus(200);
                     //res.send("ok")
                     }

@@ -261,7 +261,7 @@ $(function() {
               //repoCoords.lat = user.lat;
               //repoCoords.lon = user.lon;
   })
-  $("#addTag").on('click', addTagClick)/*function(){
+  /*$("#addTag").on('click', addTagClick)/*function(){
           
           map("map2", user.lat, user.lon, tags, "add_tag");
     
@@ -289,6 +289,7 @@ $(function() {
           */
     //}
   //)
+  $('#imgToUp').change(imgChange);
   $("#editSubmit").click(function(){
     
         if (confirm("Change: are you sure you want to?")){
@@ -547,7 +548,8 @@ function setScene(obj,cb){
   
     if (confirm("face North now")){ 
       
-                    
+                    $("a-sphere").remove();
+                    //$("a-scene").append('<a-entity id="cam" ><a-camera><a-cursor></a-cursor></a-camera></a-entity>')
                     $("a-animation").remove();
                     $("a-text").remove();
                     $("a-image").remove();
@@ -628,20 +630,20 @@ function setScene(obj,cb){
                     //var h = parseFloat(((400/300) * 12).toFixed(2))
             
                     $("a-scene").append('<a-image src="' + obj[i].url + '" width="'+ w + '" height="'+ h + '"' +
-                                        ' position="' + obj[i].pos + '" >' +
-                                        '<a-animation attribute="rotation" dur="3000" fill="forwards" from="0 0 0" ' +
-                                        'to="0 360 0" easing="linear" repeat="indefinite"></a-animation>' +
-                                        '</a-image>')
+                                          ' position="' + obj[i].pos + '" >' +
+                                          '<a-animation attribute="rotation" dur="3000" fill="forwards" from="0 0 0" ' +
+                                          'to="0 360 0" easing="linear" repeat="indefinite"></a-animation>' +
+                                          '</a-image>')
             
           }
         
       }
       
-      $("#cam").attr("position", obj[0].x + " " + obj[0].alt + " " + obj[0].z);
+      $("#cam").attr("position", (obj[0].x -1) + " " + obj[0].alt + " " + obj[0].z);
       $("#cam").attr("rotation", "0 -90 0");    // y +90 camera points to S; // -90 = camera points to N
       //$("#cam").attr("fov", 50);
       
-      var x = parseFloat(obj[0].x) + 100; console.log(typeof x)
+      var x = parseFloat(obj[0].x) + 100; //console.log(typeof x)
       var y = obj[0].alt + 85;
       var spherePos = x + " " + y + " " + obj[0].z
       console.log("north indicator pos", spherePos);
@@ -656,7 +658,7 @@ function setScene(obj,cb){
       if (cb) cb()
       
       
-      
+      console.log("scene set")
     }
 }
 function getGPS(req, cb) {
@@ -789,7 +791,7 @@ function map(divname, ulat, ulon, t, msg){
             if (t[i].name === "zero") continue;
       
             var col, fillOpa;
-            if (t[i]._type === "text")     col = t[i].col; else col = "white"
+            if (t[i]._type === "text")     col = t[i].col; else col = "black"
             if (t[i]._type === "text") fillOpa = 0.25; else fillOpa = 0;
       
             var circle = L.circle([t[i].lat, t[i].lon],{
@@ -1031,7 +1033,7 @@ function login(){
   
               var x = JSON.stringify({nick: $("#loginNick").val(),pass: $("#loginPass").val()})
   
-              console.log(x)
+              
               $.post("/login", x, 
                      function(data, status,xhr){
 
@@ -1098,26 +1100,27 @@ function usePublic(){
       
   
 }
-function imgChange(){
+function imgChange(smt){
           //function(){   
           
-          
+              console.log("img change function")
             
-            
-                    //console.log("upload", this)
+                    // $("#imgToUp")
+                    //console.log("passed parm.= ", smt)
+                    console.log("files A:",$("#imgToUp").files)
                     console.log("files",this.files[0])
                     //console.log("files", this.files)
             
                     if (this.files && this.files[0]) {  console.log("has files")
                       
                               var reader  = new FileReader();
-                              console.log(reader)
+                              //console.log(reader)
                               file = this.files[0] //reader.readAsDataURL(...)
                               //console.log("File name: " + file.name);                        
                                           
                               reader.readAsDataURL(this.files[0]);
                                                       
-                              console.log("test end", file)
+                              //console.log("test end", file)
                               var data
                               reader.onload = function(ev) { 
                                 
@@ -1136,6 +1139,7 @@ function imgChange(){
                                } else {
                                    preview.src = "";
                                }*/
+                                console.log("end of img Change");
                               }
                     }
         //})
@@ -1153,7 +1157,13 @@ function imgUpload(){
   
                 $("#textLabel").hide();
           
-          $('#imgToUp').change(imgChange)
+          //$('#imgToUp').change(imgChange//function(){
+          
+            //console.log("---- --- ;");
+            
+          
+          //}
+          //)
 }
 var doUpload = function(file, cb){
                                           //var files = document.getElementById("myid").files; 
@@ -1197,6 +1207,8 @@ function toText(){
 }
 function mySettingsClick(){
   
+          $("#upperMenuOpen").hide();
+  
           $("#mySettings").hide();
           $("#reposition").hide();
           $("#addTag").hide();
@@ -1213,8 +1225,12 @@ function addTagClick(){
                   $("#openKbd").hide();
                   $("#addTag").hide();
                   $("#reposition").hide();
+  
+                  $("#submit").show();
+                  $("#editSubmit").hide();
+  
                   $("#imgCaptionLabel").hide();
-
+  
                   $("#addtagmenu").css("display", "flex");
 
                           $("#text").val("");
@@ -1244,49 +1260,55 @@ function getMyTags(){
                     
                           if (item._type === "text"){
                     
-                                $("#tagsForEditing").append('<div style="display: flex">' + 
-                                                                '<div id="tagEdit' + index + '"+ title="' + item._id + '" class="tagToEdit">' + 
+                                $("#tagsForEditing").append('<div style="width:100%; display: flex; align-items: center; justify-content: space-between; ">' + 
+                                                                '<div class="tagToEdit">' + 
                                                                       '<div class="tagText">' + item.text + '</div>' + 
-                                                                      '<i class="fa fa-font" aria-hidden="false"></i>' + 
+                                                                      '<div id="tagEdit' + index + '" title="' + item._id + 
+                                                                            '" class="tagEditButton" >edit<i class="fa fa-font" aria-hidden="false"></i></div>' + 
                                                                 '</div>' + 
-                                                                '<div id="delete' + index + '"><i class="fa fa-trash" aria-hidden="false"></i></div>' +
+                                                                '<div id="delete' + index + '" style="margin: 0px 5px;"><i class="fa fa-trash" aria-hidden="false"></i></div>' +
                                                             '</div>')
                                 $("#tagEdit" + index).click(function(){
                                   
                                             console.log("this", this)
                                             editTag(index);
-                                            //this.off("click")
-                                            $("#tagEdit" + index).off("click")
-                                            console.log("test edit", index)
                                 })
                                 $("#delete" + index).click(function(){
+                                  
                                             console.log("this", this)
-                                            //console.log("delete", index)
-                                            //this.off("click")
-                                            $("#tagEdit" + index).off("click")
                                             console.log("delete", index)
+                                  
+                                            deleteTag(index)
                                 })
                             
                             
                           } else if (item._type === "img"){
                             
-                                $("#tagsForEditing").append('<div style="display: flex">' + 
-                                                                '<div id="tagEdit' + index + '"+ title="' + item._id + '" class="tagToEdit">' + 
-                                                                    '<div class="tagText">' + item.text + '</div>' + 
-                                                                    '<i class="fa fa-picture-o" aria-hidden="false"></i>' + 
+                                $("#tagsForEditing").append('<div style="width:100%; display: flex; align-items: center; justify-content: space-between;">' + 
+                                                                '<div class="tagToEdit">' + 
+                                                                      '<div class="tagText">' + item.text + '</div>' + 
+                                                                      '<div id="tagEdit' + index + '" title="' + item._id + 
+                                                                            '" class="tagEditButton">edit<i class="fa fa-picture-o" aria-hidden="false"></i>'+
+                                                                      '</div>' + 
                                                                 '</div>' +
-                                                                '<div id="delete' + index + '"><i class="fa fa-trash" aria-hidden="false"></i></div>' +
+                                                                '<div id="delete' + index + '" style="margin: 0px 5px;"><i class="fa fa-trash" aria-hidden="false"></i></div>' +
                                                             '</div>')
                             
                                 $("#tagEdit" + index).click(function(){
                                             editTag(index);
                                             console.log("this", this)
-                                            this.off("click")
+                                            //this.off("click")
+                                            //$("#tagEdit" + index).off("click")
+                                            //$("#delete" + index).off("click")
                                 })
                                 $("#delete" + index).click(function(){
                                             console.log("delete", index)
-                                            console.log("this", this)
-                                            this.off("click")
+                                            //console.log("this", this)
+                                            //this.off("click")
+                                            //$("#tagEdit" + index).off("click")
+                                            //$("#delete" + index).off("click")
+                                          
+                                            deleteTag(index)
                                 })
                           }
                     
@@ -1300,7 +1322,7 @@ function editTag(i){
           console.log("tag to edit", i)
   
           $("#tagsForEditing").hide();
-          
+          $("#tagsForEditing div div").toArray().forEach(function(item){ $(item).off("click");})      
           
           map("map2", user.lat, user.lon, tags, "add_tag");
 
@@ -1376,10 +1398,50 @@ function submitEdit(obj,cb){
                                                   $("#openKbd").show();
                                                   $("#addTag").show();  
                                                                 
+                                                  $("#imgUpload").hide();
+                                                        $("#imgCaptionLabel").hide();
+                                                        $("#textLabel").show();
+                                                        
+                                                  $("#postText").hide();
+                                                  $("#postPic").show();
+                                                  
+                        
                                                   file = undefined;
-                                                                
+                                                  console.log("status", status)         
                                          })
               
             })
   
+}
+function deleteTag(i){
+  
+          //console.log("delete", i)
+          if (confirm('DELETE tag?\n"' + tagsToEdit[i].text + '"')){
+                $("#tagsForEditing div div").toArray().forEach(function(item){ $(item).off("click");})      
+
+                $.post("deleteTag", tagsToEdit[i]._id, function(data, status){
+
+
+                             if (data === "ok") getTags(function(){
+
+                                          $("#settingsDiv").hide();
+                                          $("#tagsForEditing").hide();
+                                              //$("#tagsForEditing").empty()
+
+                                          $("#mySettings").show();
+                                          $("#reposition").show();
+                                          $("#addTag").show();
+                                          $("#openKbd").show();          
+
+                                          $("#imgUpload").hide()
+                                          $("#img").attr("src","")
+
+                                          //var buttons = $("#tagsForEditing div div").toArray()
+                                          $("#tagsForEditing div div").toArray().forEach(function(item){ $(item).off("click");})
+
+                                          //console.log("settings closed succesfully?", buttons)
+                             })
+
+                })
+          }  
 }

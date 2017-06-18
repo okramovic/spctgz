@@ -28,14 +28,6 @@
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js" ></script>  
     
-      
-      <!--script type="text/javascript" src="cloudinary/jquery.ui.widget.js"></script>
-      <script type="text/javascript" src="cloudinary/jquery.iframe-transport.js"></script>
-      <script type="text/javascript" src="cloudinary/jquery.fileupload.js"></script>
-      <script type="text/javascript" src="cloudinary/jquery.cloudinary.js"></script-->
-
-  
-    
     <script src="client.js"></script>
     <script src="client2.js"></script>
     
@@ -72,13 +64,13 @@
                       <div id="bckTransp" onclick="skyNewCol('transparent', 0.1)"></div>
                       <div id="stop" class="upperMenuButton"><span>stop</span></div>
                       <div id="play" class="upperMenuButton"><span>play</span></div>
-                      <div id="out"  class="upperMenuButton"><span>out</span></div>
+                      
                 </div>
                 <div id="upperMenuOpen"  onclick="openUpperMenu()"   ><i class="fa fa-angle-right" aria-hidden="false"></i></div>
             
-            
-            
           </div>
+      
+      
           <div id="regAndLogin">
               <div id="regAndLogButtons" style="display: flex; flex-direction: column; align-items: center; justify-content:space-around">
                 <div id="regButton" onclick="registerOpen()" style="cursor: pointer; padding: 20px">register</div>
@@ -121,6 +113,7 @@
     </div>
     
     <div id="settingsDiv">
+      <div id="out"  class="buttonSmall"><span>log out?</span></div>
       <div id="settingsClose" class="button" onclick="settingsClose()">close</div>
       <div id="getMyTags"     class="button" onclick="getMyTags()">edit my tags</div>
     </div>
@@ -177,7 +170,7 @@
                   <div id="altsub1" class="adjust">1m D</div>
               </div>
           </div>
-          <div id="confirmPosition" class="button" style="">reposition</div>
+          <div id="confirmPosition" class="button" style="">reposition me</div>
     </div>
     
     
@@ -198,7 +191,7 @@
             <div style="width: 50%; display: flex; justify-content: center">
                 <div id="what"   class="button"  onclick="whatOpen()">what</div>
                 <div id="where"   class="button" onclick="whereOpen()">where</div>
-
+                <div id="style"   class="button" onclick="styleOpen()">how</div>
             </div>
             <div style="width: 20%; display: flex; justify-content: flex-end">
                 <div id="closeTagMenu" style="padding: 5px 10px">cancel</div>  
@@ -220,6 +213,18 @@
               <label>author signed (cant be changed)</label>
               <input id="author" type="text" class="tagMenuItem" placeholder="author">
 
+        </div>  
+      
+        <div id="whereDiv" style="display: none; flex-direction: column; align-items:center">
+              <label>tag's gps latitude</label>
+              <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
+              <label>tag's gps longitude</label>
+              <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
+              <label>how high in meters (ground level is filled in)</label>
+              <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
+        </div>
+        <div id="styleDiv" style="display: none; flex-direction: column; align-items:center">
+          
               <label>tag color</label>
               <select id="selectColor" class="tagMenuItem" style="">
                       <option disabled>choose Tag's color</option>
@@ -239,22 +244,14 @@
               </select>
               <label>size in meters</label>
               <input id="tagSize"   type="number" class="tagMenuItem" placeholder="size">
-        </div>  
-      
-        <div id="whereDiv" style="display: none; flex-direction: column; align-items:center">
-              <label>tag's gps latitude</label>
-              <input id="tagLat"   type="number" class="tagMenuItem" placeholder="tag latitude">
-              <label>tag's gps longitude</label>
-              <input id="tagLon"   type="number" class="tagMenuItem" placeholder="tag longitude">
-              <label>how high in meters (ground level is filled in)</label>
-              <input id="tagAlt"   type="number" class="tagMenuItem" placeholder="tag altitude">
         </div>
         <!--div-->
         <div id="imgUpload" style="border: 2px solid blue; background-color- white; 
                                            display: none; flex-direction: column; align-items: center;
                                            width: 100%; height- 80px">
-                      <div id="closeImg" class="button">remove image</div>
-                      <input  type="file" id="imgToUp" onchange="imgChange()" style="border- 2px solid green; 
+                      <div id="closeImg" class="buttonSmall">remove image?</div>
+          
+                      <input  type="file" id="imgToUp" onchange="" style="border- 2px solid green; 
                                                               background-color: white; 
                                                               font-size: 15px; height: auto; width: auto;
                                                               display: flex; justify-content: center;

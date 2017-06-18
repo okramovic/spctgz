@@ -27,8 +27,8 @@
   background-color: rgba(0,0,0,0.4);
 }
 .tagToEdit{
-  width- 80%;
-  margin: auto;
+  width: 85%;
+  margin- auto;
   margin-top: 3px;
   margin-bottom: 3px;
   
@@ -38,10 +38,25 @@
   background-color- white;
   border-radius: 4px;
   
+  /*border- 2px dashed gray;*/
+    
+  text-align:center;
+  
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+.tagText{
+  width: 65%;
 }
 .tagToEdit i, #tagsForEditing i{
+  margin-left: 2px;
+  padding: 2px 4px;
+  
+  background-color: white;
+  border-radius: 4px;
+}
+.tagEditButton{
   margin-left: 10px;
   padding: 2px 4px;
   

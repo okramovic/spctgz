@@ -67,15 +67,22 @@ function whatOpen(){
   
         $("#whatDiv").show()
         $("#whereDiv").hide()
+        $("#styleDiv").hide()
   
 }
 function whereOpen(){
   
         $("#whatDiv").hide()
         $("#whereDiv").css("display", "flex") 
+        $("#styleDiv").hide()
   
 }      
-
+function styleOpen(){
+  
+        $("#whatDiv").hide()
+        $("#whereDiv").hide()
+        $("#styleDiv").css("display", "flex")
+}
 function repoCamera(lat,lon,alt, cb){
   
       // it doesnt seem to work properly
@@ -135,6 +142,8 @@ function settingsClose(){
         $("#tagsForEditing").hide();
             //$("#tagsForEditing").empty()
   
+        $("#upperMenuOpen").show();
+  
         $("#mySettings").show();
         $("#reposition").show();
         $("#addTag").show();
@@ -143,4 +152,9 @@ function settingsClose(){
         $("#imgUpload").hide()
         $("#img").attr("src","")
         
+        var buttons = $("#tagsForEditing div div").toArray()
+        $("#tagsForEditing div div").toArray().forEach(function(item){ $(item).off("click");})
+  
+        console.log("settings closed succesfully?", buttons)
+  
 }
