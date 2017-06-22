@@ -727,22 +727,61 @@ function getGPS(req, cb) {
                 
               }
           
-                    /*$("#userLat").val(user.lat)
-                    $("#userLon").val(user.lon)
-                    $("#userAlt").val(user.alt)
-                    */
-          
-             // if (cb) cb();
           
         }, function(){
-                if (logr) $("#pgps").html("<br> error in navigator");    
+                if (logr) $("#pgps").html("<br> error in navigator");  
+                console.log("gps something")
+          
+                getIP(function(){
+            
+                            cb()
+                });
         }, options);
       
     } else {
       
           if (logr)  $("#pgps").html("refused nvgtr");
           console.log("|||||||   no navigator!!");
+      
+          getIP(function(){
+            
+                    cb()
+          });
     }
+}
+function getIP(cb){
+              /*$.getJSON("https://api.ipify.org?format=jsonp&callback=?",
+                          function(json) {
+                            //document.write("My public IP address is: ", json.ip);
+
+                                  console.log("ip:", json.ip);
+                
+                      
+              });*/
+              $.getJSON("https://ipapi.co/json/", function(data, d2, d3){
+                        
+                        //console.log("IP", data,d2,d3)
+                        console.log("IP", data.latitude, data.longitude)
+                  
+                        user.lat = parseFloat(data.latitude.toFixed(7));
+                        user.lon = parseFloat(data.longitude.toFixed(7));
+                        user.alt = 0;//parseFloat(position.coords.altitude.toFixed(2));      
+                
+                        console.log("IP user", user.lat, user.lon, user.alt)
+                
+                        $.get("elevation", user ,function(data, status){
+                        
+                            console.log("elevation",data)
+                            user.alt = parseFloat(data)
+                        
+                             $("#mapAlt").val(user.alt)
+                              
+                            cb()
+                          
+                            alert("your GPS service seems to be turned off.\n\nfor more precise location, allow your device's location service and include 'https://' at the beginning of the URL address");
+                      })
+                        
+              })
 }
 function map(divname, ulat, ulon, t, msg){
           //console.log("map?", ulat, ulon, cntr);
@@ -824,8 +863,11 @@ function map(divname, ulat, ulon, t, msg){
                     newlon  = parseFloat(e.latlng.lng.toFixed(7));
       
       
-                    console.log("user to?", user.lat, user.lon)
+                    console.log("user to?", newlat, newlon)
 
+                    $("#tagLat").val(newlat)
+                    $("#tagLon").val(newlon)
+      
                     /*popup  
                         .setLatLng(e.latlng)
                         .setContent("maybe youre here " + e.latlng.toString())

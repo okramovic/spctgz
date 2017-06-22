@@ -6,6 +6,10 @@ stuff used:
           (could be also https://www.filestack.com/pricing/free)
     upload img from browser to cloudinary made easy:
           http://blog.mkucz.com/?view=classic
+          
+    input file accept
+      https://stackoverflow.com/questions/11832930/html-input-file-accept-attribute-file-type-csv
+
 
 https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
